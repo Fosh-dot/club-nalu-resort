@@ -1,0 +1,945 @@
+/* =====================================
+   CLUB NALU — HOMEPAGE HERO
+===================================== */
+
+.club-nalu-home {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.home-hero {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  min-height: 600px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #343b3b;
+  color: #f8f3e7;
+}
+
+/* BACKGROUND SLIDESHOW */
+
+.hero-slideshow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  transform: scale(1.025);
+  transition:
+    opacity 1.5s ease,
+    transform 6s ease;
+}
+
+.hero-slide-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* SUBTLE IMAGE OVERLAY */
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(15, 22, 22, 0.24);
+  pointer-events: none;
+}
+
+/* CENTER CONTENT */
+
+.hero-center {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 245px;
+  text-align: center;
+}
+
+/* WAVE LOGO */
+
+.hero-wave-logo {
+  display: block;
+  width: 70px;
+  height: 70px;
+  margin-bottom: 25px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+/* MAIN HEADING */
+
+.hero-center h1 {
+  margin: 0;
+  color: #f8f3e7;
+  font-family: inherit;
+  font-size: clamp(34px, 5vw, 60px);
+  font-weight: 400;
+  letter-spacing: clamp(5px, 0.85vw, 10px);
+  line-height: 1.25;
+}
+
+/* SOCIAL ICONS */
+
+.hero-socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 13px;
+  margin-top: 30px;
+}
+
+.social-icon {
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #f3eddf;
+  color: #202b31;
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease;
+}
+
+a.social-icon:hover {
+  transform: translateY(-2px);
+  background: #ffffff;
+}
+
+.social-icon:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+/* PLAN YOUR STAY BUTTON */
+
+.hero-book-button {
+  display: inline-flex;
+  min-width: 120px;
+  min-height: 50px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 35px;
+  padding: 20px 66px;
+  border: none;
+  background: #172b3b;
+  color: #f8f3e7;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: background-color 0.25s ease;
+}
+
+.hero-book-button:hover {
+  background: #294254;
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .home-hero {
+    min-height: 580px;
+  }
+
+  .hero-center {
+    width: 94%;
+    padding-top: 45px;
+  }
+
+  .hero-wave-logo {
+    width: 32px;
+    height: 32px;
+    margin-bottom: 22px;
+  }
+
+  .hero-center h1 {
+    font-size: clamp(27px, 7vw, 38px);
+    letter-spacing: 4px;
+  }
+
+  .hero-socials {
+    gap: 11px;
+    margin-top: 25px;
+  }
+
+  .social-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .hero-book-button {
+    min-width: 145px;
+    min-height: 42px;
+    margin-top: 20px;
+    padding: 11px 18px;
+    font-size: 11px;
+  }
+}
+
+/* REDUCED MOTION */
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide,
+  .social-icon,
+  .hero-book-button {
+    transition: none;
+  }
+}
+/* =====================================
+   SECOND SECTION: WHERE STILLNESS
+   MEETS STYLE
+===================================== */
+
+.stillness-section {
+  display: grid;
+  width: 100%;
+  min-height: 460px;
+  grid-template-columns: 1.8fr 0.9fr;
+  align-items: center;
+  gap: 6%;
+  padding: 80px 2.6%;
+  background: #26314d;
+  color: #f3f0e4;
+}
+
+/* LEFT TEXT */
+
+.stillness-content {
+  min-width: 0;
+}
+
+.stillness-content h2 {
+  margin: 0 0 34px;
+  color: #b8d0d0;
+  font-family: inherit;
+  font-size: clamp(36px, 4.6vw, 58px);
+  font-weight: 400;
+  letter-spacing: 5px;
+  line-height: 1.55;
+}
+
+.stillness-content p {
+  max-width: 690px;
+  margin: 0;
+  color: #d8e0df;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.35px;
+}
+
+/* RIGHT IMAGE */
+
+.stillness-image-wrapper {
+  width: 100%;
+  height: 345px;
+  overflow: hidden;
+}
+
+.stillness-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .stillness-section {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4%;
+    padding: 65px 3%;
+  }
+
+  .stillness-content h2 {
+    font-size: clamp(30px, 4.5vw, 44px);
+    letter-spacing: 3px;
+    line-height: 1.4;
+  }
+
+  .stillness-content p {
+    font-size: 12px;
+  }
+
+  .stillness-image-wrapper {
+    height: 300px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .stillness-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 65px 6%;
+  }
+
+  .stillness-content h2 {
+    margin-bottom: 25px;
+    font-size: clamp(32px, 8vw, 43px);
+    letter-spacing: 2px;
+    line-height: 1.35;
+  }
+
+  .stillness-content p {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .stillness-image-wrapper {
+    height: 300px;
+  }
+}
+/* =====================================
+   THIRD SECTION: SLOW MORNINGS
+===================================== */
+
+.slow-mornings-section {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  background: #f1eedf;
+  color: #191919;
+}
+
+/* LEFT IMAGE */
+
+.slow-mornings-image {
+  width: 100%;
+  height: 500px;
+  overflow: hidden;
+}
+
+.slow-mornings-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* RIGHT CONTENT */
+
+.slow-mornings-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 45px 9%;
+}
+
+.slow-mornings-content h2 {
+  margin: 0 0 25px;
+  color: #191919;
+  font-family: inherit;
+  font-size: clamp(29px, 3.2vw, 41px);
+  font-weight: 400;
+  letter-spacing: 4px;
+  line-height: 1.45;
+}
+
+.slow-mornings-content p {
+  max-width: 510px;
+  margin: 0;
+  color: #252525;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.1px;
+}
+
+/* PLAN YOUR STAY BUTTON */
+
+.slow-mornings-book-link {
+  display: inline-flex;
+  min-width: 155px;
+  min-height: 45px;
+  align-items: center;
+  justify-content: center;
+  align-self: center;
+  margin-top: 38px;
+  padding: 18px 50px;
+  background: #172b3b;
+  color: #f8f3e7;
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  transition: background-color 0.25s ease;
+}
+
+.slow-mornings-book-link:hover {
+  background: #294254;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .slow-mornings-image {
+    height: 360px;
+  }
+
+  .slow-mornings-content {
+    padding: 35px 7%;
+  }
+
+  .slow-mornings-content h2 {
+    font-size: clamp(26px, 3.5vw, 34px);
+    letter-spacing: 3px;
+    line-height: 1.4;
+  }
+
+  .slow-mornings-content p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .slow-mornings-book-link {
+    margin-top: 28px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .slow-mornings-section {
+    grid-template-columns: 1fr;
+  }
+
+  .slow-mornings-image {
+    height: 340px;
+  }
+
+  .slow-mornings-content {
+    padding: 45px 7%;
+  }
+
+  .slow-mornings-content h2 {
+    margin-bottom: 22px;
+    font-size: clamp(29px, 7.5vw, 38px);
+    letter-spacing: 3px;
+    line-height: 1.4;
+  }
+
+  .slow-mornings-content p {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .slow-mornings-book-link {
+    min-width: 145px;
+    min-height: 42px;
+    margin-top: 30px;
+  }
+}
+/* FOURTH SECTION: WHERE CALM COMES NATURALLY */
+
+.calm-section {
+  position: relative;
+  width: 100%;
+  height: 800px;
+  overflow: hidden;
+  background: #eae7d8;
+}
+
+/* FULL-SECTION BACKGROUND IMAGE */
+
+.calm-background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.calm-background img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* OVERLAPPING TEXT BOX */
+
+.calm-content {
+  position: absolute;
+  top: 50%;
+  right: 2.5%;
+  z-index: 1;
+  width: 47.5%;
+  max-width: 760px;
+  padding: 55px 4%;
+  background: rgba(245, 242, 226, 0.92);
+  color: #607f9b;
+  transform: translateY(-50%);
+}
+
+.calm-content h2 {
+  margin: 0 0 23px;
+  color: #607f9b;
+  font-family: inherit;
+  font-size: clamp(30px, 3.2vw, 41px);
+  font-weight: 400;
+  letter-spacing: 4px;
+  line-height: 1.5;
+}
+
+.calm-content p {
+  max-width: 540px;
+  margin: 0;
+  color: #607f9b;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.65;
+  letter-spacing: 0.2px;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .calm-section {
+    height: 430px;
+  }
+
+  .calm-content {
+    right: 2.5%;
+    width: 55%;
+    padding: 35px 4%;
+  }
+
+  .calm-content h2 {
+    font-size: clamp(26px, 3.5vw, 34px);
+    letter-spacing: 3px;
+    line-height: 1.4;
+  }
+
+  .calm-content p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .calm-section {
+    height: auto;
+    min-height: 600px;
+    display: flex;
+    align-items: flex-end;
+    padding: 220px 0 25px;
+  }
+
+  .calm-content {
+    position: relative;
+    top: auto;
+    right: auto;
+    width: 92%;
+    max-width: none;
+    margin: 0 auto;
+    padding: 30px 7%;
+    transform: none;
+    background: rgba(245, 242, 226, 0.94);
+  }
+
+  .calm-content h2 {
+    margin-bottom: 18px;
+    font-size: clamp(26px, 7vw, 34px);
+    letter-spacing: 2px;
+    line-height: 1.4;
+  }
+
+  .calm-content p {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+}
+/* =====================================
+   FIFTH SECTION: A TASTE OF ITALY
+===================================== */
+
+.italian-dining-section {
+  display: grid;
+  width: 100%;
+  min-height: 465px;
+  grid-template-columns: 1.8fr 0.9fr;
+  align-items: center;
+  gap: 6%;
+  padding: 65px 2.6%;
+  background: #85803b;
+  color: #f8f3e7;
+}
+
+/* LEFT CONTENT */
+
+.italian-dining-content {
+  min-width: 0;
+}
+
+.italian-dining-content h2 {
+  margin: 0 0 32px;
+  color: #f8f3e7;
+  font-family: inherit;
+  font-size: clamp(36px, 4.6vw, 58px);
+  font-weight: 400;
+  letter-spacing: 5px;
+  line-height: 1.55;
+}
+
+.italian-dining-content p {
+  max-width: 720px;
+  margin: 0;
+  color: #f8f3e7;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.2px;
+}
+
+/* RIGHT IMAGE */
+
+.italian-dining-image {
+  width: 100%;
+  height: 370px;
+  overflow: hidden;
+}
+
+.italian-dining-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .italian-dining-section {
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 4%;
+    padding: 50px 3%;
+  }
+
+  .italian-dining-content h2 {
+    font-size: clamp(30px, 4.5vw, 44px);
+    letter-spacing: 3px;
+    line-height: 1.4;
+  }
+
+  .italian-dining-content p {
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  .italian-dining-image {
+    height: 320px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .italian-dining-section {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 55px 6%;
+  }
+
+  .italian-dining-content h2 {
+    margin-bottom: 23px;
+    font-size: clamp(30px, 8vw, 42px);
+    letter-spacing: 2px;
+    line-height: 1.4;
+  }
+
+  .italian-dining-content p {
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .italian-dining-image {
+    height: 340px;
+  }
+}
+/* =====================================
+SIXTH SECTION: THE QUIET SIDE OF LA UNION
+===================================== */
+
+.quiet-side-section {
+  width: 100%;
+  min-height: 480px;
+  padding: 130px 0 125px;
+  background: #bfd0d1;
+  color: #29334f;
+}
+
+.quiet-side-content {
+  width: 56%;
+  max-width: 715px;
+  margin: 0 auto;
+}
+
+.quiet-side-content h2 {
+  margin: 0 0 34px;
+  color: #29334f;
+  font-size: clamp(38px, 4.5vw, 58px);
+  font-weight: 400;
+  letter-spacing: 5px;
+  line-height: 1.55;
+}
+
+.quiet-side-content p {
+  margin: 0;
+  color: #35445c;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.2px;
+}
+
+/* TABLET */
+
+@media (max-width: 900px) {
+  .quiet-side-section {
+    min-height: 420px;
+    padding: 100px 0;
+  }
+
+  .quiet-side-content {
+    width: 65%;
+  }
+
+  .quiet-side-content h2 {
+    font-size: clamp(34px, 4.5vw, 46px);
+    letter-spacing: 4px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+  .quiet-side-section {
+    min-height: auto;
+    padding: 85px 7%;
+  }
+
+  .quiet-side-content {
+    width: 100%;
+  }
+
+  .quiet-side-content h2 {
+    margin-bottom: 28px;
+    font-size: clamp(30px, 8vw, 40px);
+    letter-spacing: 3px;
+    line-height: 1.4;
+  }
+
+  .quiet-side-content p {
+    font-size: 13px;
+    line-height: 1.7;
+  }
+}
+
+/* FIX: REMOVE THE WHITE SEAM BETWEEN SECTIONS 5 AND 6 */
+.italian-dining-section {
+  margin-bottom: 0 !important;
+  border-bottom: 0 !important;
+}
+
+.quiet-side-section {
+  display: flow-root;
+  margin-top: 0 !important;
+  border-top: 0 !important;
+}
+
+.club-nalu-home .italian-dining-section + .quiet-side-section {
+  margin-top: 0 !important;
+}
+
+@media (max-width: 600px) {
+  .club-nalu-home .italian-dining-section + .quiet-side-section {
+    margin-top: 0 !important;
+  }
+}
+/* SEVENTH SECTION: FULL-WIDTH RECTANGULAR IMAGE */
+.resort-image-section {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+  overflow: hidden;
+}
+
+.resort-image-section img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin: 0;
+  padding: 0;
+}
+/* EIGHTH SECTION: COME AS YOU ARE */
+.come-as-you-are-section {
+  width: 100%;
+  background: #d8cfc0;
+  padding: 110px 2.55%;
+  box-sizing: border-box;
+}
+
+.come-as-you-are-content {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  align-items: center;
+  gap: 8%;
+  width: 100%;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.come-as-you-are-text {
+  color: #29334f;
+}
+
+.come-as-you-are-text h2 {
+  margin: 0 0 48px;
+  font-size: clamp(34px, 3.1vw, 54px);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: 1px;
+}
+
+.come-as-you-are-text p {
+  max-width: 850px;
+  margin: 0 0 46px;
+  font-size: 17px;
+  line-height: 1.75;
+  letter-spacing: 0.2px;
+}
+
+.come-as-you-are-image {
+  width: 100%;
+  overflow: hidden;
+}
+
+.come-as-you-are-image img {
+  display: block;
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.plan-stay-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 250px;
+  min-height: 60px;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  background: #29334f;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.plan-stay-button:hover {
+  background: #3b496a;
+}
+
+/* TABLET */
+@media (max-width: 1000px) {
+  .come-as-you-are-section {
+    padding: 80px 4%;
+  }
+
+  .come-as-you-are-content {
+    grid-template-columns: 1fr 0.9fr;
+    gap: 5%;
+  }
+
+  .come-as-you-are-text h2 {
+    margin-bottom: 30px;
+    font-size: clamp(30px, 3.5vw, 42px);
+    line-height: 1.4;
+  }
+
+  .come-as-you-are-text p {
+    font-size: 15px;
+    margin-bottom: 30px;
+  }
+
+  .come-as-you-are-image img {
+    height: 420px;
+  }
+
+  .plan-stay-button {
+    width: 250px;
+    min-height: 65px;
+  }
+}
+
+/* MOBILE */
+@media (max-width: 650px) {
+  .come-as-you-are-section {
+    padding: 65px 6%;
+  }
+
+  .come-as-you-are-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .come-as-you-are-text h2 {
+    font-size: clamp(27px, 7vw, 38px);
+    line-height: 1.5;
+    letter-spacing: 0;
+    margin-bottom: 28px;
+  }
+
+  .come-as-you-are-text p {
+    font-size: 14px;
+    line-height: 1.8;
+    margin-bottom: 30px;
+  }
+
+  .come-as-you-are-image img {
+    height: 380px;
+  }
+
+  .plan-stay-button {
+    width: 100%;
+    min-height: 60px;
+    font-size: 14px;
+  }
+}

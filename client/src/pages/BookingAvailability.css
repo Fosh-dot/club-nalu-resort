@@ -1,0 +1,921 @@
+.availability-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 12000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3vh 3vw;
+  background: rgba(18, 28, 36, 0.62);
+}
+.availability-dialog {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(280px, 30%) minmax(0, 1fr);
+  width: min(1500px, 96vw);
+  height: min(88vh, 900px);
+  background: #f7f8fa;
+  box-shadow: 0 14px 50px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  color: #5b6273;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.availability-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 5;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  color: #4f596a;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+.availability-calendar-panel {
+  position: relative;
+  overflow-y: auto;
+  background: #fff;
+  padding: 28px 22px 20px;
+  border-right: 1px solid #e5e8ec;
+}
+.availability-calendar-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.availability-calendar-heading strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+.availability-calendar-heading button,
+.availability-today {
+  border: 0;
+  background: transparent;
+  color: #626a7b;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 5px 9px;
+}
+.availability-today {
+  display: block;
+  margin: 0 0 18px auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: #006b84;
+}
+.availability-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  text-align: center;
+  gap: 3px;
+}
+.availability-weekdays {
+  margin-bottom: 8px;
+  color: #006b84;
+  font-weight: 600;
+  font-size: 12px;
+}
+.availability-weekdays span {
+  padding: 8px 0;
+}
+.availability-days button,
+.availability-empty-day {
+  min-width: 0;
+  aspect-ratio: 1;
+  border: 0;
+  background: transparent;
+  color: #626a7b;
+  font: inherit;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.availability-days button {
+  cursor: pointer;
+  border-radius: 2px;
+}
+.availability-days button:hover {
+  background: #e7f1f2;
+}
+.availability-days button.selected {
+  background: #006b84;
+  color: #fff;
+  font-weight: 700;
+}
+.availability-days button.in-range {
+  background: #dceef0;
+  color: #006b84;
+}
+.availability-calendar-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 8px;
+  border-top: 1px solid #e7e9ed;
+  margin-top: 25px;
+  padding-top: 18px;
+}
+.availability-calendar-summary div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.availability-calendar-summary span {
+  font-size: 11px;
+  color: #788197;
+}
+.availability-calendar-summary strong {
+  font-size: 12px;
+  white-space: nowrap;
+}
+.availability-calendar-hint {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #828999;
+  margin-top: 18px;
+}
+.availability-results {
+  overflow-y: auto;
+  min-width: 0;
+  background: #fff;
+}
+.availability-benefits-banner {
+  min-height: 120px;
+  display: grid;
+  grid-template-columns: 1.1fr 0.8fr 1.3fr 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 28px;
+  background: #00617a;
+  color: #fff;
+}
+.availability-benefits-title {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  line-height: 1.05;
+}
+.availability-benefits-title span {
+  font-size: 21px;
+  font-weight: 700;
+}
+.availability-benefits-title strong {
+  font-size: 21px;
+  font-weight: 400;
+}
+.availability-benefits-count {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.availability-benefits-count b {
+  font-size: 46px;
+  line-height: 1;
+}
+.availability-benefits-count span {
+  font-size: 17px;
+  line-height: 1.05;
+}
+.availability-benefits-banner ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 11px;
+  line-height: 1.45;
+  font-weight: 600;
+}
+.availability-benefits-banner li {
+  position: relative;
+  padding-left: 14px;
+  margin: 3px 0;
+}
+.availability-benefits-banner li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+}
+.availability-best-rate {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.availability-best-rate span {
+  font-size: 28px;
+}
+.availability-best-rate strong {
+  font-size: 20px;
+  line-height: 1.05;
+}
+.availability-rates-bar {
+  min-height: 38px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #06495a;
+  color: #fff;
+  font-size: 12px;
+}
+.availability-rates-bar span {
+  padding: 5px 8px;
+  background: #d6e7d9;
+  color: #3f6659;
+  white-space: nowrap;
+}
+.availability-results-content {
+  padding: 26px 24px 30px;
+}
+.availability-results-content h2 {
+  margin: 0 0 18px;
+  font-size: 21px;
+  line-height: 1.3;
+  color: #555d70;
+}
+.availability-stay-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 15px;
+  margin-bottom: 26px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #626a7b;
+}
+.availability-stay-summary span {
+  padding-right: 14px;
+  border-right: 1px solid #e0e3e7;
+}
+.availability-stay-summary span:last-child {
+  border-right: 0;
+}
+.availability-promo-note {
+  margin: -12px 0 18px;
+  font-size: 12px;
+}
+.availability-room-card {
+  display: grid;
+  grid-template-columns: minmax(160px, 30%) minmax(180px, 1fr) minmax(
+      130px,
+      19%
+    );
+  margin-bottom: 18px;
+  background: #fff;
+  box-shadow: 0 2px 15px rgba(25, 40, 55, 0.15);
+  border: 1px solid #edf0f2;
+}
+.availability-room-card.room-selected {
+  border: 2px solid #258878;
+}
+.availability-room-image-wrap {
+  position: relative;
+  min-height: 205px;
+  background: #e5e7e8;
+  overflow: hidden;
+}
+.availability-room-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 205px;
+  object-fit: cover;
+}
+.availability-special-offer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 6px 10px;
+  background: #d8ece6;
+  color: #287a6b;
+  font-size: 11px;
+  font-weight: 700;
+}
+.availability-room-info {
+  padding: 18px 16px;
+  min-width: 0;
+}
+.availability-room-info h3 {
+  margin: 0 0 12px;
+  color: #555d70;
+  font-size: 16px;
+}
+.availability-room-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  border-bottom: 1px solid #e8eaed;
+  padding-bottom: 10px;
+  font-size: 11px;
+  color: #626a7b;
+}
+.availability-room-info p {
+  margin: 10px 0 12px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #777f91;
+}
+.availability-amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+.availability-amenities span {
+  font-size: 11px;
+  color: #626a7b;
+  white-space: nowrap;
+}
+.availability-room-price {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 7px;
+  padding: 18px 12px;
+  border-left: 1px solid #f0f1f3;
+}
+.availability-room-price > span {
+  font-size: 11px;
+}
+.availability-room-price > strong {
+  font-size: 20px;
+  color: #258878;
+  white-space: nowrap;
+}
+.availability-room-price small {
+  font-size: 11px;
+  line-height: 1.5;
+  color: #697184;
+}
+.availability-room-price .availability-discount {
+  color: #d34a4a;
+}
+.availability-discount del {
+  color: #818797;
+  margin-left: 4px;
+}
+.availability-room-price button,
+.availability-selection-notice button {
+  margin-top: auto;
+  width: 100%;
+  padding: 10px 8px;
+  border: 0;
+  background: #258878;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+.availability-room-price button:hover,
+.availability-selection-notice button:hover {
+  background: #176e62;
+}
+.availability-room-price button.selected-room-button {
+  background: #07566a;
+}
+.availability-selection-notice {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  background: #fff;
+  border: 1px solid #dfe7e8;
+  box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.07);
+  font-weight: 600;
+}
+.availability-selection-notice button {
+  width: auto;
+  min-width: 130px;
+  margin: 0;
+}
+@media (max-width: 1000px) {
+  .availability-dialog {
+    grid-template-columns: 250px minmax(0, 1fr);
+    width: 98vw;
+    height: 92vh;
+  }
+  .availability-benefits-banner {
+    grid-template-columns: 1fr 1fr;
+    padding: 20px;
+  }
+  .availability-benefits-banner ul {
+    grid-column: 1/-1;
+  }
+  .availability-room-card {
+    grid-template-columns: minmax(130px, 34%) minmax(0, 1fr);
+  }
+  .availability-room-price {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    text-align: left;
+    border-left: 0;
+    border-top: 1px solid #eee;
+    padding: 12px 16px;
+  }
+  .availability-room-price button {
+    width: auto;
+    margin: 0;
+  }
+}
+@media (max-width: 680px) {
+  .availability-overlay {
+    padding: 0;
+  }
+  .availability-dialog {
+    width: 100%;
+    height: 100dvh;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .availability-calendar-panel {
+    max-height: 38vh;
+    padding: 18px 16px 12px;
+    border-right: 0;
+    border-bottom: 1px solid #e5e8ec;
+  }
+  .availability-calendar-heading {
+    margin-right: 38px;
+  }
+  .availability-calendar-grid {
+    gap: 1px;
+  }
+  .availability-days button,
+  .availability-empty-day {
+    aspect-ratio: auto;
+    height: 27px;
+  }
+  .availability-calendar-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 12px;
+    padding-top: 12px;
+  }
+  .availability-calendar-hint {
+    margin: 8px 0 0;
+  }
+  .availability-results {
+    min-height: 0;
+  }
+  .availability-benefits-banner {
+    min-height: auto;
+    grid-template-columns: 1fr 1fr;
+    padding: 18px 16px;
+    gap: 10px;
+  }
+  .availability-benefits-title span,
+  .availability-benefits-title strong {
+    font-size: 16px;
+  }
+  .availability-benefits-count b {
+    font-size: 36px;
+  }
+  .availability-benefits-count span {
+    font-size: 14px;
+  }
+  .availability-best-rate strong {
+    font-size: 15px;
+  }
+  .availability-results-content {
+    padding: 20px 14px;
+  }
+  .availability-results-content h2 {
+    font-size: 18px;
+  }
+  .availability-room-card {
+    grid-template-columns: 1fr;
+  }
+  .availability-room-image-wrap,
+  .availability-room-image {
+    height: 190px;
+    min-height: 190px;
+  }
+  .availability-room-price {
+    grid-template-columns: 1fr 1fr;
+  }
+  .availability-room-price button {
+    grid-column: 1/-1;
+    width: 100%;
+  }
+  .availability-stay-summary {
+    gap: 9px;
+    font-size: 11px;
+  }
+  .availability-stay-summary span {
+    padding-right: 8px;
+  }
+}
+
+/* Booking sidebar controls */
+.availability-guest-controls {
+  margin-top: 18px;
+}
+.availability-room-guest-group {
+  padding: 0 0 14px;
+  margin-bottom: 13px;
+  border-bottom: 1px solid #e9edf0;
+}
+.availability-room-guest-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 28px;
+  margin-bottom: 12px;
+  color: #555d70;
+  font-size: 13px;
+}
+.availability-add-room,
+.availability-remove-room {
+  border: 0;
+  background: transparent;
+  color: #006b84;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.availability-add-room {
+  margin-left: auto;
+}
+.availability-add-room span {
+  font-size: 17px;
+  vertical-align: -1px;
+  margin-right: 3px;
+}
+.availability-remove-room {
+  color: #9b5960;
+}
+.availability-counter-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 8px 0;
+  color: #626a7b;
+  font-size: 12px;
+}
+.availability-counter {
+  display: grid;
+  grid-template-columns: 34px 38px 34px;
+  min-height: 33px;
+  border: 1px solid #e1e5e9;
+  background: #fff;
+}
+.availability-counter button {
+  border: 0;
+  background: #fff;
+  color: #006b84;
+  font-size: 19px;
+  cursor: pointer;
+}
+.availability-counter button:disabled {
+  color: #c3c8cf;
+  cursor: not-allowed;
+}
+.availability-counter output {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid #eef0f2;
+  border-right: 1px solid #eef0f2;
+  color: #626a7b;
+  font-size: 12px;
+}
+.availability-check-button {
+  display: block;
+  width: 100%;
+  min-height: 49px;
+  margin-top: 15px;
+  padding: 12px 14px;
+  border: 0;
+  background: #258878;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+.availability-check-button:hover {
+  background: #176e62;
+}
+.availability-validation-message {
+  margin: 8px 0 0;
+  color: #a33d3d;
+  font-size: 11px;
+  line-height: 1.45;
+}
+.availability-promo-section {
+  margin-top: 12px;
+  border-bottom: 1px solid #edf0f2;
+  padding-bottom: 12px;
+}
+.availability-promo-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 0;
+  border: 0;
+  background: transparent;
+  color: #006b84;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.availability-promo-toggle span {
+  font-size: 16px;
+}
+.availability-promo-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 8px;
+  color: #788197;
+  font-size: 11px;
+}
+.availability-promo-field input {
+  width: 100%;
+  min-height: 38px;
+  padding: 9px 10px;
+  border: 1px solid #e5e8ec;
+  border-radius: 0;
+  outline: none;
+  color: #555d70;
+  background: #fff;
+  font: inherit;
+  font-size: 12px;
+}
+.availability-promo-field input:focus {
+  border-color: #258878;
+  box-shadow: 0 0 0 2px rgba(37, 136, 120, 0.12);
+}
+@media (max-width: 680px) {
+  .availability-guest-controls {
+    margin-top: 12px;
+  }
+  .availability-room-guest-group {
+    padding-bottom: 10px;
+    margin-bottom: 9px;
+  }
+  .availability-check-button {
+    min-height: 44px;
+    margin-top: 10px;
+  }
+}
+
+/* Premium room gallery and amenity presentation */
+.availability-room-card {
+  grid-template-columns: minmax(200px, 30%) minmax(230px, 1fr) minmax(
+      135px,
+      18%
+    );
+  align-items: stretch;
+}
+.availability-room-gallery {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f0f2f3;
+}
+.availability-room-gallery .availability-room-image-wrap {
+  min-height: 205px;
+  flex: 1;
+}
+.availability-room-gallery .availability-room-image {
+  min-height: 205px;
+  height: 100%;
+}
+.availability-gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 38px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.9);
+  color: #596273;
+  font-size: 27px;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+.availability-gallery-prev {
+  left: 0;
+}
+.availability-gallery-next {
+  right: 0;
+}
+.availability-gallery-arrow:hover {
+  background: #fff;
+  color: #006b84;
+}
+.availability-gallery-count {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 4px 7px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #5b6273;
+  font-size: 11px;
+  font-weight: 600;
+}
+.availability-gallery-thumbnails {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  padding: 5px 0 0;
+}
+.availability-gallery-thumbnails button {
+  height: 62px;
+  min-width: 0;
+  padding: 0;
+  border: 2px solid transparent;
+  background: #e7eaec;
+  overflow: hidden;
+  cursor: pointer;
+}
+.availability-gallery-thumbnails button.active {
+  border-color: #006b84;
+}
+.availability-gallery-thumbnails img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.availability-premium-amenities {
+  display: flex;
+  align-items: center;
+  gap: 8px 12px;
+  margin-top: 12px;
+}
+.availability-amenity-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  white-space: nowrap;
+  font-size: 11px;
+  color: #586576;
+}
+.availability-amenity-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #edf6f7;
+  color: #00758d;
+  font-size: 15px;
+  font-weight: 700;
+}
+.availability-see-more {
+  margin-top: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #006b84;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.availability-room-price > small:not(.availability-discount) {
+  margin-top: -3px;
+}
+.availability-room-price button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #006b84;
+}
+.availability-room-price button:hover {
+  background: #00566b;
+}
+@media (max-width: 1000px) {
+  .availability-room-card {
+    grid-template-columns: minmax(150px, 34%) minmax(0, 1fr);
+  }
+  .availability-room-price {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 680px) {
+  .availability-room-card {
+    grid-template-columns: 1fr;
+  }
+  .availability-room-gallery .availability-room-image-wrap,
+  .availability-room-gallery .availability-room-image {
+    height: 210px;
+    min-height: 210px;
+  }
+  .availability-gallery-thumbnails button {
+    height: 58px;
+  }
+  .availability-room-info {
+    padding: 16px;
+  }
+  .availability-room-price {
+    grid-template-columns: 1fr 1fr;
+  }
+  .availability-room-price button {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+}
+
+/* Match the reference: one large room image, no thumbnail boxes below it. */
+.availability-room-card {
+  grid-template-columns: minmax(200px, 30%) minmax(230px, 1fr) minmax(
+      135px,
+      18%
+    );
+}
+.availability-room-gallery {
+  display: block;
+  min-height: 235px;
+  background: #eef0f2;
+}
+.availability-room-gallery .availability-room-image-wrap {
+  height: 100%;
+  min-height: 235px;
+}
+.availability-room-gallery .availability-room-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 235px;
+  object-fit: cover;
+}
+/* Hide any thumbnail strip if left behind by a cached style. */
+.availability-gallery-thumbnails {
+  display: none !important;
+}
+.availability-room-price button {
+  background: #006b84;
+  min-height: 38px;
+  padding: 10px 14px;
+  white-space: nowrap;
+}
+.availability-room-price button:hover {
+  background: #00566b;
+}
+@media (max-width: 1000px) {
+  .availability-room-gallery {
+    min-height: 205px;
+  }
+  .availability-room-gallery .availability-room-image-wrap,
+  .availability-room-gallery .availability-room-image {
+    min-height: 205px;
+  }
+}
+@media (max-width: 680px) {
+  .availability-room-gallery,
+  .availability-room-gallery .availability-room-image-wrap,
+  .availability-room-gallery .availability-room-image {
+    height: 210px;
+    min-height: 210px;
+  }
+}
+
+/* Suite card polish */
+.availability-room-card:has(.availability-room-gallery)
+  .availability-room-info {
+  align-self: stretch;
+}
+.availability-room-info .availability-premium-amenities {
+  row-gap: 8px;
+}
+.availability-room-price button {
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+/* Video preview inside the Luxury Pool Villa media area */
+.availability-room-video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 235px;
+  object-fit: cover;
+  background: #111;
+}
+@media (max-width: 1000px) {
+  .availability-room-video {
+    min-height: 205px;
+  }
+}
+@media (max-width: 680px) {
+  .availability-room-video {
+    height: 210px;
+    min-height: 210px;
+  }
+}

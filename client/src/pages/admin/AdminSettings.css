@@ -1,0 +1,218 @@
+.admin-settings-card {
+  min-height: 100%;
+  padding: 32px;
+  color: #173d3a;
+  background: #f5f8f7;
+}
+
+.admin-settings-header {
+  margin-bottom: 28px;
+}
+
+.admin-settings-eyebrow {
+  margin: 0 0 8px;
+  color: #43857b;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.admin-settings-header h1 {
+  margin: 0 0 10px;
+  color: #173d3a;
+  font-size: 30px;
+}
+
+.admin-settings-header > div > p:last-child {
+  max-width: 680px;
+  margin: 0;
+  color: #6b7c79;
+  line-height: 1.7;
+}
+
+.admin-settings-card {
+  max-width: 1000px;
+  overflow: hidden;
+  border: 1px solid #e2ebe8;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 8px 28px rgb(20 60 54 / 5%);
+}
+
+.admin-settings-card-heading {
+  padding: 25px 28px;
+  border-bottom: 1px solid #e8efed;
+}
+
+.admin-settings-card-heading h2 {
+  margin: 0 0 8px;
+  color: #173d3a;
+  font-size: 19px;
+}
+
+.admin-settings-card-heading p {
+  margin: 0;
+  color: #71817e;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.admin-settings-card form {
+  padding: 28px;
+}
+
+.admin-settings-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.admin-settings-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.admin-settings-field-full {
+  grid-column: 1 / -1;
+}
+
+.admin-settings-field label {
+  color: #294d48;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-settings-field input,
+.admin-settings-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #d7e3df;
+  border-radius: 9px;
+  padding: 12px 14px;
+  outline: none;
+  background: #fff;
+  color: #173d3a;
+  font: inherit;
+  font-size: 14px;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
+}
+
+.admin-settings-field input {
+  min-height: 46px;
+}
+
+.admin-settings-field textarea {
+  resize: vertical;
+  min-height: 125px;
+  line-height: 1.6;
+}
+
+.admin-settings-field input:focus,
+.admin-settings-field textarea:focus {
+  border-color: #43857b;
+  box-shadow: 0 0 0 3px rgb(67 133 123 / 12%);
+}
+
+.admin-settings-field input::placeholder,
+.admin-settings-field textarea::placeholder {
+  color: #a0aeaa;
+}
+
+.admin-settings-form-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid #e8efed;
+}
+
+.admin-settings-form-footer p {
+  margin: 0;
+  color: #71817e;
+  font-size: 12px;
+}
+
+.admin-settings-form-footer button {
+  min-height: 46px;
+  border: none;
+  border-radius: 9px;
+  padding: 0 22px;
+  background: #176b60;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    opacity 0.2s;
+}
+
+.admin-settings-form-footer button:hover:not(:disabled) {
+  background: #11564d;
+}
+
+.admin-settings-form-footer button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+.admin-settings-message {
+  max-width: 1000px;
+  box-sizing: border-box;
+  margin-bottom: 18px;
+  border-radius: 9px;
+  padding: 14px 16px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.admin-settings-error {
+  border: 1px solid #f0c7c7;
+  background: #fff1f1;
+  color: #9d2525;
+}
+
+.admin-settings-success {
+  border: 1px solid #bce4ce;
+  background: #effaf3;
+  color: #216b3e;
+}
+
+@media (max-width: 640px) {
+  .admin-settings-page {
+    padding: 20px 15px;
+  }
+
+  .admin-settings-header h1 {
+    font-size: 25px;
+  }
+
+  .admin-settings-card-heading,
+  .admin-settings-card form {
+    padding: 20px;
+  }
+
+  .admin-settings-form-grid {
+    grid-template-columns: 1fr;
+    gap: 19px;
+  }
+
+  .admin-settings-field-full {
+    grid-column: auto;
+  }
+
+  .admin-settings-form-footer {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .admin-settings-form-footer button {
+    width: 100%;
+  }
+}
