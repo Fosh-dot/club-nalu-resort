@@ -76,7 +76,7 @@ function AdminPayments() {
     setError("");
 
     try {
-      const response = await fetch(`${API_URL}/admin/payments`, {
+      const response = await fetch(`${API_URL}/api/admin/payments`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -217,7 +217,7 @@ function AdminPayments() {
 
     try {
       const response = await fetch(
-        `${API_URL}/admin/payments/${paymentId}/decision`,
+        `${API_URL}/api/admin/payments/${paymentId}/decision`,
         {
           method: "POST",
           headers: {
@@ -276,7 +276,7 @@ function AdminPayments() {
 
     try {
       const response = await fetch(
-        `${API_URL}/admin/payments/${payment.payment_id}/receipt`,
+        `${API_URL}/api/admin/payments/${payment.payment_id}/receipt`,
         {
           method: "GET",
           headers: {
