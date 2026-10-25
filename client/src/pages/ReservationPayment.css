@@ -626,3 +626,436 @@
     font-size: 19px;
   }
 }
+
+/* =========================================================
+   Club Nalu — responsive mobile polish
+   Keeps the desktop layout intact and improves small screens.
+   ========================================================= */
+.reservation-payment-page,
+.reservation-payment-page * {
+  box-sizing: border-box;
+}
+
+.reservation-payment-page {
+  width: 100%;
+  overflow-x: clip;
+}
+
+.reservation-payment-main {
+  min-width: 0;
+}
+
+.payment-reservation-summary,
+.payment-main-panel,
+.payment-form,
+.payment-room-summary,
+.club-nalu-bank-details,
+.club-nalu-receipt-section {
+  min-width: 0;
+}
+
+.payment-room-price,
+.payment-total-row strong,
+.club-nalu-success-amount strong {
+  overflow-wrap: anywhere;
+}
+
+.payment-field input,
+.payment-field select,
+.payment-phone-field input,
+.payment-book-main,
+.payment-book-summary,
+.club-nalu-continue-payment {
+  max-width: 100%;
+}
+
+.payment-field input,
+.payment-phone-field input {
+  min-width: 0;
+}
+
+.club-nalu-bank-details {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  .reservation-payment-page {
+    font-size: 15px;
+  }
+
+  .reservation-payment-main {
+    width: calc(100% - 24px);
+    max-width: 560px;
+    margin: 12px auto 24px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .payment-reservation-summary {
+    padding: 18px 16px;
+    border-radius: 12px;
+  }
+
+  .payment-reservation-summary h1 {
+    font-size: 22px;
+    line-height: 1.3;
+  }
+
+  .payment-summary-actions {
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .payment-back,
+  .payment-modify {
+    min-height: 36px;
+    font-size: 13px;
+    text-align: left;
+  }
+
+  .payment-date-summary {
+    grid-template-columns: minmax(0, 1fr) 18px minmax(0, 1fr);
+    gap: 8px 4px;
+    padding: 14px 10px;
+    border-radius: 8px;
+  }
+
+  .payment-date-summary > div {
+    min-width: 0;
+  }
+
+  .payment-date-summary > div:nth-of-type(3) {
+    grid-column: 1 / 2;
+  }
+
+  .payment-date-summary > div:nth-of-type(4) {
+    grid-column: 3 / 4;
+  }
+
+  .payment-date-summary span,
+  .payment-date-summary small {
+    font-size: 11px;
+    line-height: 1.35;
+  }
+
+  .payment-date-summary strong {
+    font-size: 20px;
+  }
+
+  .payment-date-stat {
+    margin-top: 4px;
+    padding: 10px 4px 0;
+  }
+
+  .payment-date-stat strong {
+    font-size: 13px;
+  }
+
+  .payment-room-summary {
+    padding-bottom: 18px;
+    font-size: 13px;
+  }
+
+  .payment-room-name {
+    align-items: flex-start;
+    padding-right: 0;
+    line-height: 1.45;
+  }
+
+  .payment-room-name strong {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .payment-room-price {
+    position: static;
+    display: block;
+    margin: 10px 0 4px 21px;
+    font-size: 16px;
+  }
+
+  .payment-room-summary p {
+    margin-left: 21px;
+    line-height: 1.5;
+  }
+
+  .payment-total-row {
+    gap: 12px;
+    margin-top: 18px;
+    font-size: 13px;
+  }
+
+  .payment-total-row strong {
+    font-size: 16px;
+    text-align: right;
+  }
+
+  .payment-total-final strong {
+    font-size: 19px;
+  }
+
+  .payment-book-summary {
+    min-height: 48px;
+    margin-top: 18px;
+    border-radius: 7px;
+  }
+
+  .payment-main-panel {
+    display: block;
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .payment-form h2 {
+    font-size: 21px;
+    line-height: 1.35;
+  }
+
+  .payment-field {
+    gap: 7px;
+    margin-bottom: 18px;
+    font-size: 13px;
+  }
+
+  .payment-field input,
+  .payment-field select,
+  .payment-phone-field input {
+    min-height: 44px;
+    height: auto;
+    padding: 9px 2px;
+    font-size: 16px;
+  }
+
+  .payment-phone-field {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 7px;
+    margin-bottom: 24px;
+    font-size: 13px;
+  }
+
+  .payment-phone-field small {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .payment-intro {
+    margin-bottom: 20px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .club-nalu-bank-details {
+    padding: 16px;
+    border-radius: 9px;
+  }
+
+  .club-nalu-bank-details h3 {
+    font-size: 18px;
+    line-height: 1.4;
+  }
+
+  .club-nalu-bank-details p {
+    font-size: 14px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  .payment-check-row {
+    gap: 10px;
+    margin-top: 18px;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .payment-check-row input {
+    flex: 0 0 18px;
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+  }
+
+  .payment-book-main {
+    min-height: 50px;
+    margin-top: 22px;
+    padding: 12px 14px;
+    border-radius: 7px;
+    font-size: 15px;
+    line-height: 1.4;
+    white-space: normal;
+  }
+
+  .club-nalu-receipt-section {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #e0e4e8;
+  }
+
+  .club-nalu-receipt-section h2 {
+    font-size: 20px;
+    line-height: 1.35;
+  }
+
+  .club-nalu-receipt-section p {
+    font-size: 14px;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+  }
+
+  .club-nalu-receipt-section input[type="file"] {
+    display: block;
+    width: 100%;
+    min-height: 44px;
+    font-size: 13px;
+  }
+
+  .booking-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 20px 16px;
+  }
+
+  .booking-footer nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 16px;
+    width: 100%;
+  }
+
+  .booking-footer nav button {
+    min-height: 34px;
+    padding: 4px 0;
+    font-size: 12px;
+    text-align: left;
+  }
+
+  .club-nalu-success-overlay,
+  .privacy-overlay,
+  .cookie-preferences-overlay,
+  .accessibility-overlay {
+    padding: 12px;
+    align-items: center;
+  }
+
+  .club-nalu-success-modal {
+    width: 100%;
+    max-width: 460px;
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+    padding: 34px 20px 22px;
+    border-radius: 16px;
+  }
+
+  .club-nalu-success-icon {
+    width: 62px;
+    height: 62px;
+    margin-bottom: 16px;
+    font-size: 32px;
+  }
+
+  .club-nalu-success-eyebrow {
+    letter-spacing: 2px;
+  }
+
+  .club-nalu-success-modal h2 {
+    font-size: 24px;
+  }
+
+  .club-nalu-success-message,
+  .club-nalu-success-note {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .club-nalu-reference-box {
+    padding: 16px 10px;
+  }
+
+  .club-nalu-reference-box strong {
+    max-width: 100%;
+    font-size: 17px;
+  }
+
+  .club-nalu-success-amount {
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .club-nalu-success-amount span {
+    font-size: 13px;
+  }
+
+  .club-nalu-success-amount strong {
+    font-size: 18px;
+    text-align: right;
+  }
+
+  .privacy-modal,
+  .cookie-preferences-modal,
+  .accessibility-modal {
+    width: 100%;
+    max-width: 520px;
+    max-height: calc(100dvh - 24px);
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .reservation-payment-main {
+    width: calc(100% - 16px);
+  }
+
+  .payment-reservation-summary {
+    padding: 16px 12px;
+  }
+
+  .payment-main-panel {
+    padding: 18px 12px;
+  }
+
+  .payment-date-summary {
+    padding: 12px 6px;
+  }
+
+  .payment-date-summary strong {
+    font-size: 18px;
+  }
+
+  .payment-summary-actions {
+    gap: 6px;
+  }
+
+  .payment-back,
+  .payment-modify {
+    font-size: 12px;
+  }
+
+  .payment-total-row strong {
+    font-size: 15px;
+  }
+
+  .club-nalu-success-modal {
+    padding: 32px 16px 20px;
+  }
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .club-nalu-success-modal {
+    animation: none;
+  }
+
+  .club-nalu-continue-payment {
+    transition: none;
+  }
+
+  html:focus-within {
+    scroll-behavior: auto;
+  }
+}

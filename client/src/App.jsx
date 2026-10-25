@@ -17,6 +17,7 @@ import "./App.css";
 function App() {
   return (
     <BrowserRouter>
+      {" "}
       <Routes>
         {/* Customer-facing website */}
         <Route path="/" element={<Home />} />
@@ -24,21 +25,19 @@ function App() {
         <Route path="/booking" element={<Booking />} />
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/reservation/payment" element={<ReservationPayment />} />
-
+        ```
         {/* Admin pages */}
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/payments" element={<AdminPayments />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
-
         {/* Redirect accommodation management to the dashboard */}
         <Route
           path="/admin/accommodations"
           element={<Navigate to="/admin" replace />}
         />
-
-        {/* Redirect unknown routes to the homepage */}
+        {/* Unknown routes */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
