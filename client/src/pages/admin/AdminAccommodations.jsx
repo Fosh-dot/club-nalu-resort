@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import "./AdminAccommodations.css";
 
 const API_URL = `${
-  import.meta.env.VITE_API_URL || "http://localhost:5000"
+  import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
 }/api/admin/accommodations`;
 
 const EMPTY_FORM = {

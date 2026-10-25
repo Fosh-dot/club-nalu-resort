@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import "./AdminPayments.css";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "https://club-nalu-api.onrender.com";
 
 const STATUS_LABELS = {
   awaiting_payment: "Awaiting Payment",

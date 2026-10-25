@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const API_URL =
+  import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com";
 
 // Change this to your deployed public website URL if it uses a different domain.
 const PUBLIC_SITE_URL = "/";
