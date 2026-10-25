@@ -1,6 +1,14 @@
 const mysql = require("mysql2/promise");
-
+const fs = require("fs");
+const path = require("path");
 require("dotenv").config();
+
+const certificatePath = path.join(
+  __dirname,
+  "..",
+  "certs",
+  "isrgrootx1 (1).pem",
+);
 
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
@@ -9,9 +17,9 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "club_nalu_db",
 
-  // Secure connection for TiDB Cloud
   ssl: process.env.DB_HOST
     ? {
+        ca: fs.readFileSync(certificatePath, "utf8"),
         minVersion: "TLSv1.2",
         rejectUnauthorized: true,
       }

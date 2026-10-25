@@ -14,41 +14,59 @@ const adminAccommodationRoutes = require("./routes/adminAccommodationRoutes");
 
 const app = express();
 
-// Middleware
+// Allowed frontend origins
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://clubnalu.org",
+  "https://www.clubnalu.org",
+  "https://club-nalu-resort.onrender.com",
+];
+
+// CORS configuration
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      console.error(`CORS blocked origin: ${origin}`);
+      return callback(new Error(`CORS blocked origin: ${origin}`));
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
+// Request middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Public Accommodation API
+// Public accommodation API
 app.use("/api/accommodations", accommodationRoutes);
 
 // Booking API
 app.post("/api/bookings", bookingController.createBooking);
 
-// Payment Settings API
+// Payment settings API
 app.use("/api/payment-settings", paymentSettingsRoutes);
 
-// Diagnostic middleware: confirms payment requests reach this server.
+// Diagnostic middleware for payment requests
 app.use("/api/payments", (req, res, next) => {
   console.log("PAYMENTS REQUEST REACHED SERVER:", req.method, req.originalUrl);
   next();
 });
 
-// Payment Receipt Upload API
+// Payment receipt upload API
 app.use("/api/payments", paymentRoutes);
 
-// Admin Authentication, Dashboard, Bookings and Payments API
+// Admin authentication, dashboard, bookings and payments API
 app.use("/api/admin", adminRoutes);
 
-// Admin Accommodation Management API
+// Admin accommodation management API
 app.use("/api/admin/accommodations", adminAccommodationRoutes);
 
-// Home Route
+// Home route
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -56,7 +74,7 @@ app.get("/", (req, res) => {
   });
 });
 
-// Health Check Route
+// Health check route
 app.get("/api/health", (req, res) => {
   res.json({
     success: true,
@@ -72,7 +90,7 @@ async function startServer() {
     const PORT = process.env.PORT || 5000;
 
     app.listen(PORT, () => {
-      console.log(`Club Nalu API running at http://localhost:${PORT}`);
+      console.log(`Club Nalu API is running on port ${PORT}`);
     });
   } catch (error) {
     console.error(
