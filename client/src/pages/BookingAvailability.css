@@ -919,3 +919,242 @@
     min-height: 210px;
   }
 }
+/* MOBILE BOOKING POPUP FIX */
+@media (max-width: 680px) {
+  .availability-overlay {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: stretch !important;
+    justify-content: stretch !important;
+    overflow: hidden !important;
+    overscroll-behavior: contain;
+  }
+
+  .availability-dialog {
+    position: relative !important;
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 100% !important;
+    height: 100dvh !important;
+    max-height: 100% !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .availability-calendar-panel {
+    position: relative !important;
+    width: 100% !important;
+    max-height: 36vh !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    padding: 12px 14px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid #e5e8ec !important;
+  }
+
+  .availability-calendar-heading {
+    margin-bottom: 4px !important;
+  }
+
+  .availability-calendar-heading strong {
+    font-size: 14px !important;
+  }
+
+  .availability-today {
+    margin-bottom: 5px !important;
+    font-size: 11px !important;
+  }
+
+  .availability-weekdays {
+    margin-bottom: 2px !important;
+    font-size: 10px !important;
+  }
+
+  .availability-weekdays span {
+    padding: 3px 0 !important;
+  }
+
+  .availability-days button,
+  .availability-empty-day {
+    height: 24px !important;
+    min-height: 24px !important;
+    font-size: 11px !important;
+  }
+
+  .availability-calendar-summary {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+    padding-top: 8px !important;
+  }
+
+  .availability-calendar-summary strong {
+    font-size: 11px !important;
+    white-space: normal !important;
+  }
+
+  .availability-calendar-hint {
+    margin: 6px 0 0 !important;
+    font-size: 10px !important;
+  }
+
+  .availability-results {
+    min-width: 0 !important;
+    min-height: 0 !important;
+    height: 100% !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    padding-bottom: 20px !important;
+  }
+
+  .availability-benefits-banner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 8px !important;
+    padding: 12px !important;
+  }
+
+  .availability-benefits-banner ul {
+    grid-column: 1 / -1 !important;
+    font-size: 10px !important;
+  }
+
+  .availability-benefits-title span,
+  .availability-benefits-title strong {
+    font-size: 14px !important;
+  }
+
+  .availability-benefits-count b {
+    font-size: 30px !important;
+  }
+
+  .availability-benefits-count span,
+  .availability-best-rate strong {
+    font-size: 12px !important;
+  }
+
+  .availability-rates-bar {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 8px 12px !important;
+    font-size: 11px !important;
+  }
+
+  .availability-results-content {
+    padding: 14px 12px 24px !important;
+  }
+
+  .availability-results-content h2 {
+    margin-bottom: 10px !important;
+    font-size: 16px !important;
+  }
+
+  .availability-stay-summary {
+    gap: 7px !important;
+    margin-bottom: 14px !important;
+    font-size: 10px !important;
+  }
+
+  .availability-room-card {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100% !important;
+    margin-bottom: 14px !important;
+    overflow: hidden !important;
+  }
+
+  .availability-room-gallery,
+  .availability-room-gallery .availability-room-image-wrap,
+  .availability-room-gallery .availability-room-image,
+  .availability-room-video {
+    width: 100% !important;
+    height: 190px !important;
+    min-height: 190px !important;
+    max-height: 190px !important;
+  }
+
+  .availability-room-info {
+    min-width: 0 !important;
+    padding: 13px 12px !important;
+  }
+
+  .availability-room-info h3 {
+    margin-bottom: 8px !important;
+    font-size: 15px !important;
+  }
+
+  .availability-room-info p {
+    margin: 8px 0 !important;
+    font-size: 12px !important;
+    line-height: 1.45 !important;
+    overflow-wrap: anywhere;
+  }
+
+  .availability-premium-amenities {
+    gap: 6px 8px !important;
+    margin-top: 8px !important;
+  }
+
+  .availability-amenity-chip {
+    white-space: normal !important;
+    font-size: 10px !important;
+  }
+
+  .availability-room-price {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 6px 10px !important;
+    padding: 12px !important;
+    border-top: 1px solid #edf0f2 !important;
+    border-left: 0 !important;
+    text-align: left !important;
+  }
+
+  .availability-room-price > strong {
+    justify-self: end !important;
+    font-size: 17px !important;
+  }
+
+  .availability-room-price > small {
+    grid-column: 1 / -1 !important;
+  }
+
+  .availability-room-price button {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-height: 42px !important;
+    margin-top: 4px !important;
+    white-space: normal !important;
+  }
+
+  .availability-selection-notice {
+    position: sticky !important;
+    bottom: 0 !important;
+    z-index: 4 !important;
+    gap: 10px !important;
+    padding: 10px !important;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+    background: #fff !important;
+  }
+
+  .availability-close {
+    position: absolute !important;
+    top: max(8px, env(safe-area-inset-top, 0px)) !important;
+    right: 8px !important;
+    z-index: 20 !important;
+    width: 32px !important;
+    height: 32px !important;
+    border-radius: 50% !important;
+    background: #fff !important;
+  }
+}

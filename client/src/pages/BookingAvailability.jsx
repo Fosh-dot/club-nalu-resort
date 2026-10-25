@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./BookingAvailability.css";
 
@@ -305,6 +305,19 @@ function BookingAvailability({
   onClose,
 }) {
   const navigate = useNavigate();
+  // Lock background scrolling while the booking popup is mounted.
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    const previousOverscroll = document.body.style.overscrollBehavior;
+
+    document.body.style.overflow = "hidden";
+    document.body.style.overscrollBehavior = "none";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.body.style.overscrollBehavior = previousOverscroll;
+    };
+  }, []);
 
   const [calendarMonth, setCalendarMonth] = useState(() => {
     const date = parseLocalDate(checkIn);
