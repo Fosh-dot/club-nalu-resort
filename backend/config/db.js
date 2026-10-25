@@ -1,4 +1,5 @@
 const mysql = require("mysql2/promise");
+
 require("dotenv").config();
 
 const pool = mysql.createPool({
@@ -7,22 +8,34 @@ const pool = mysql.createPool({
   user: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "club_nalu_db",
+
+  // Secure connection for TiDB Cloud
+  ssl: process.env.DB_HOST
+    ? {
+        minVersion: "TLSv1.2",
+        rejectUnauthorized: true,
+      }
+    : undefined,
+
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
 });
 
 async function testDatabaseConnection() {
+  let connection;
+
   try {
-    const connection = await pool.getConnection();
-
+    connection = await pool.getConnection();
     console.log("✅ MySQL connected successfully!");
-    console.log("🏝️ Database: club_nalu_db");
-
-    connection.release();
+    console.log(`🏝️ Database: ${process.env.DB_NAME || "club_nalu_db"}`);
   } catch (error) {
     console.error("❌ MySQL connection failed:", error.message);
     throw error;
+  } finally {
+    if (connection) {
+      connection.release();
+    }
   }
 }
 
