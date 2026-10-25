@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import "./AdminSettings.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
-
+const API_URL = (
+  import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+).replace(/\/$/, "");
 const emptySettings = {
   bank_name: "",
   account_name: "",

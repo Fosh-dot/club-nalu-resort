@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./AdminLogin.css";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com";
+const API_URL = (
+  import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+).replace(/\/$/, "");
 
 function AdminLogin() {
   const navigate = useNavigate();

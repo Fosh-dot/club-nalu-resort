@@ -4,7 +4,9 @@ import { useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 import "./AdminBookings.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com";
+const API_URL = (
+  import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+).replace(/\/$/, "");
 
 function AdminBookings() {
   const navigate = useNavigate();
