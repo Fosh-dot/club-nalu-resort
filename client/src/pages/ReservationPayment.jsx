@@ -5,7 +5,7 @@ import "./ReservationPayment.css";
 function ReservationPayment() {
   const navigate = useNavigate();
   const [phone, setPhone] = useState("");
-  const [paymentMethod] = useState("bank_transfer");
+  const [paymentMethod, setPaymentMethod] = useState("bank_transfer");
   const [paymentSettings, setPaymentSettings] = useState(null);
   const [showReservationSuccess, setShowReservationSuccess] = useState(false);
 
@@ -29,6 +29,7 @@ function ReservationPayment() {
 
   const [showAccessibility, setShowAccessibility] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const effectivePaymentMethod = createdBooking?.paymentMethod || paymentMethod;
 
   const readSessionObject = (key) => {
     try {
@@ -52,9 +53,11 @@ function ReservationPayment() {
       .format(Number(amount) || 0)
       .replace("PHP", "₱");
 
-  // Load the current bank details configured by the administrator.
+  // Load bank transfer and GCash details configured by the administrator.
   useEffect(() => {
-    const apiBaseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000";
+    const apiBaseUrl = (
+      import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+    ).replace(/\/$/, "");
 
     fetch(`${apiBaseUrl}/api/payment-settings`)
       .then(async (response) => {
@@ -95,8 +98,9 @@ function ReservationPayment() {
     setReceiptMessage("");
 
     try {
-      const apiBaseUrl =
-        import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const apiBaseUrl = (
+        import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+      ).replace(/\/$/, "");
 
       const response = await fetch(
         `${apiBaseUrl}/api/payments/${encodeURIComponent(
@@ -220,6 +224,7 @@ function ReservationPayment() {
       children,
       rooms,
       accommodationId,
+      paymentMethod,
       specialRequests: guestDetails.specialRequests || "",
       newsletter: Boolean(newsletter || guestDetails.newsletter),
     };
@@ -227,8 +232,9 @@ function ReservationPayment() {
     setIsSubmitting(true);
 
     try {
-      const apiBaseUrl =
-        import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const apiBaseUrl = (
+        import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+      ).replace(/\/$/, "");
 
       const response = await fetch(`${apiBaseUrl}/api/bookings`, {
         method: "POST",
@@ -246,16 +252,23 @@ function ReservationPayment() {
         );
       }
 
+      const bookingWithPaymentMethod = {
+        ...result.data,
+        paymentMethod: result.data?.paymentMethod || paymentMethod,
+      };
+
       sessionStorage.setItem(
         "clubNaluCreatedBooking",
-        JSON.stringify(result.data),
+        JSON.stringify(bookingWithPaymentMethod),
       );
 
-      setCreatedBooking(result.data);
+      setCreatedBooking(bookingWithPaymentMethod);
       setShowReservationSuccess(true);
 
       setReceiptMessage(
-        "Reservation created. Transfer the amount to the bank account below, then upload your receipt.",
+        effectivePaymentMethod === "gcash"
+          ? "Reservation created. Pay using the GCash details below, then upload your receipt."
+          : "Reservation created. Transfer the amount to the bank account below, then upload your receipt.",
       );
     } catch (error) {
       console.error("Club Nalu booking submission failed:", error);
@@ -500,52 +513,120 @@ function ReservationPayment() {
               complete, upload your payment receipt for verification.
             </p>
 
-            {/* BANK ACCOUNT DETAILS */}
+            {/* PAYMENT METHOD AND ACCOUNT DETAILS */}
             <section
               id="club-nalu-payment-section"
               className="club-nalu-bank-details"
             >
-              <h3>Bank Transfer Details</h3>
+              <h3>Choose Payment Method</h3>
 
-              {!paymentSettings ? (
-                <p role="status">
-                  Please use the account details below to complete your payment.
-                  Ensure the transfer amount matches your reservation total.
-                </p>
-              ) : paymentSettings.account_number ? (
-                <>
-                  <p>
-                    <strong>Bank:</strong>{" "}
-                    {paymentSettings.bank_name || "Not provided"}
-                  </p>
+              <div
+                className="club-nalu-payment-options"
+                role="group"
+                aria-label="Choose payment method"
+              >
+                <button
+                  type="button"
+                  className={`club-nalu-payment-option ${
+                    paymentMethod === "bank_transfer" ? "active" : ""
+                  }`}
+                  aria-pressed={paymentMethod === "bank_transfer"}
+                  onClick={() => setPaymentMethod("bank_transfer")}
+                  disabled={Boolean(createdBooking)}
+                >
+                  Bank Transfer
+                </button>
 
-                  <p>
-                    <strong>Account name:</strong>{" "}
-                    {paymentSettings.account_name || "Not provided"}
-                  </p>
+                {Number(paymentSettings?.gcash_enabled) === 1 && (
+                  <button
+                    type="button"
+                    className={`club-nalu-payment-option ${
+                      paymentMethod === "gcash" ? "active" : ""
+                    }`}
+                    aria-pressed={paymentMethod === "gcash"}
+                    onClick={() => setPaymentMethod("gcash")}
+                    disabled={Boolean(createdBooking)}
+                  >
+                    GCash
+                  </button>
+                )}
+              </div>
 
-                  <p>
-                    <strong>Account number:</strong>{" "}
-                    {paymentSettings.account_number}
-                  </p>
+              {paymentMethod === "bank_transfer" ? (
+                <div className="club-nalu-payment-details">
+                  <h3>Bank Transfer Details</h3>
 
-                  {paymentSettings.branch_name && (
+                  {!paymentSettings ? (
+                    <p role="status">
+                      Payment details are loading. Please wait before making a
+                      transfer.
+                    </p>
+                  ) : paymentSettings.account_number ? (
+                    <>
+                      <p>
+                        <strong>Bank:</strong>{" "}
+                        {paymentSettings.bank_name || "Not provided"}
+                      </p>
+
+                      <p>
+                        <strong>Account name:</strong>{" "}
+                        {paymentSettings.account_name || "Not provided"}
+                      </p>
+
+                      <p>
+                        <strong>Account number:</strong>{" "}
+                        {paymentSettings.account_number}
+                      </p>
+
+                      {paymentSettings.branch_name && (
+                        <p>
+                          <strong>Branch:</strong> {paymentSettings.branch_name}
+                        </p>
+                      )}
+
+                      <p>
+                        <strong>Payment instructions:</strong>{" "}
+                        {paymentSettings.payment_instructions ||
+                          "Please contact the resort for transfer instructions."}
+                      </p>
+                    </>
+                  ) : (
                     <p>
-                      <strong>Branch:</strong> {paymentSettings.branch_name}
+                      Bank account details have not been configured yet. Please
+                      contact the resort before transferring money.
                     </p>
                   )}
-
-                  <p>
-                    <strong>Payment instructions:</strong>{" "}
-                    {paymentSettings.payment_instructions ||
-                      "Please contact the resort for transfer instructions."}
-                  </p>
-                </>
+                </div>
               ) : (
-                <p>
-                  Bank account details have not been configured yet. Please
-                  contact the resort before transferring money.
-                </p>
+                <div className="club-nalu-payment-details">
+                  <h3>GCash Details</h3>
+
+                  {Number(paymentSettings?.gcash_enabled) === 1 &&
+                  paymentSettings?.gcash_number ? (
+                    <>
+                      <p>
+                        <strong>GCash number:</strong>{" "}
+                        {paymentSettings.gcash_number}
+                      </p>
+
+                      <p>
+                        <strong>Account name:</strong>{" "}
+                        {paymentSettings.gcash_account_name || "Not provided"}
+                      </p>
+
+                      <p>
+                        <strong>Payment instructions:</strong>{" "}
+                        {paymentSettings.gcash_instructions ||
+                          "Send the payment to the GCash account above, then upload your receipt."}
+                      </p>
+                    </>
+                  ) : (
+                    <p>
+                      GCash is currently unavailable. Please choose Bank
+                      Transfer or contact the resort.
+                    </p>
+                  )}
+                </div>
               )}
             </section>
 
@@ -654,8 +735,9 @@ function ReservationPayment() {
                   </div>
 
                   <p className="club-nalu-success-note">
-                    Complete your bank transfer and upload your receipt so the
-                    resort can verify your payment.
+                    {effectivePaymentMethod === "gcash"
+                      ? "Complete your GCash payment and upload your receipt so the resort can verify your payment."
+                      : "Complete your bank transfer and upload your receipt so the resort can verify your payment."}
                   </p>
 
                   <button
@@ -686,8 +768,9 @@ function ReservationPayment() {
                 <h2>Upload your payment receipt</h2>
 
                 <p>
-                  After completing your bank transfer, select the receipt or
-                  transfer confirmation you want the resort to verify.
+                  {effectivePaymentMethod === "gcash"
+                    ? "After completing your GCash payment, select the receipt or transaction confirmation you want the resort to verify."
+                    : "After completing your bank transfer, select the receipt or transfer confirmation you want the resort to verify."}
                 </p>
 
                 <label className="payment-field">

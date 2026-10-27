@@ -216,3 +216,100 @@
     width: 100%;
   }
 }
+/* Payment settings: Bank Transfer and GCash */
+.admin-settings-page > form {
+  display: grid;
+  gap: 22px;
+}
+
+.admin-settings-card-body {
+  padding: 28px;
+}
+
+.admin-settings-gcash-card {
+  margin-top: 0;
+}
+
+.admin-settings-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 26px;
+  padding: 16px 18px;
+  border: 1px solid #e2ebe8;
+  border-radius: 10px;
+  background: #f7faf9;
+  cursor: pointer;
+}
+
+.admin-settings-toggle > span:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-settings-toggle strong {
+  color: #173d3a;
+  font-size: 14px;
+}
+
+.admin-settings-toggle small {
+  color: #71817e;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.admin-settings-toggle input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.admin-settings-toggle-switch {
+  position: relative;
+  flex: 0 0 46px;
+  width: 46px;
+  height: 26px;
+  border-radius: 30px;
+  background: #c7d2cf;
+  transition: background 0.2s ease;
+}
+
+.admin-settings-toggle-switch::after {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  content: "";
+  box-shadow: 0 1px 4px rgb(0 0 0 / 18%);
+  transition: transform 0.2s ease;
+}
+
+.admin-settings-toggle input:checked + .admin-settings-toggle-switch {
+  background: #176b60;
+}
+
+.admin-settings-toggle input:checked + .admin-settings-toggle-switch::after {
+  transform: translateX(20px);
+}
+
+.admin-settings-toggle input:focus-visible + .admin-settings-toggle-switch {
+  outline: 3px solid rgb(67 133 123 / 30%);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .admin-settings-card-body {
+    padding: 20px;
+  }
+
+  .admin-settings-toggle {
+    align-items: flex-start;
+    padding: 14px;
+  }
+}

@@ -78,10 +78,10 @@ async function uploadPaymentReceipt(req, res) {
       .split(path.sep)
       .join("/");
 
+    // Save the receipt without overwriting the guest's selected payment method.
     await connection.execute(
       `UPDATE payments
-       SET payment_method = 'bank_transfer',
-           payment_slip_path = ?,
+       SET payment_slip_path = ?,
            payment_status = 'pending_verification',
            verified_by = NULL,
            verified_at = NULL

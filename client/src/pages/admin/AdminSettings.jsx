@@ -4,12 +4,17 @@ import "./AdminSettings.css";
 const API_URL = (
   import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
 ).replace(/\/$/, "");
+
 const emptySettings = {
   bank_name: "",
   account_name: "",
   account_number: "",
   branch_name: "",
   payment_instructions: "",
+  gcash_number: "",
+  gcash_account_name: "",
+  gcash_instructions: "",
+  gcash_enabled: 0,
 };
 
 function AdminSettings() {
@@ -53,29 +58,33 @@ function AdminSettings() {
       }
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Unable to load bank settings.");
+        throw new Error(result.message || "Unable to load payment settings.");
       }
+
+      const data = result.data || {};
 
       setSettings({
         ...emptySettings,
-        ...result.data,
-        bank_name: result.data?.bank_name || "",
-        account_name: result.data?.account_name || "",
-        account_number: result.data?.account_number || "",
-        branch_name: result.data?.branch_name || "",
-        payment_instructions: result.data?.payment_instructions || "",
+        ...data,
+        bank_name: data.bank_name || "",
+        account_name: data.account_name || "",
+        account_number: data.account_number || "",
+        branch_name: data.branch_name || "",
+        payment_instructions: data.payment_instructions || "",
+        gcash_number: data.gcash_number || "",
+        gcash_account_name: data.gcash_account_name || "",
+        gcash_instructions: data.gcash_instructions || "",
+        gcash_enabled: Number(data.gcash_enabled) === 1 ? 1 : 0,
       });
     } catch (loadError) {
-      setError(loadError.message || "Unable to load bank settings.");
+      setError(loadError.message || "Unable to load payment settings.");
     } finally {
       setIsLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      loadSettings();
-    }, 0);
+    const timer = window.setTimeout(loadSettings, 0);
 
     return () => window.clearTimeout(timer);
   }, [loadSettings]);
@@ -86,6 +95,16 @@ function AdminSettings() {
     setSettings((current) => ({
       ...current,
       [name]: value,
+    }));
+
+    setError("");
+    setSuccess("");
+  };
+
+  const handleGcashToggle = (event) => {
+    setSettings((current) => ({
+      ...current,
+      gcash_enabled: event.target.checked ? 1 : 0,
     }));
 
     setError("");
@@ -107,6 +126,16 @@ function AdminSettings() {
       return;
     }
 
+    if (
+      Number(settings.gcash_enabled) === 1 &&
+      (!settings.gcash_number.trim() || !settings.gcash_account_name.trim())
+    ) {
+      setError(
+        "Enter the GCash number and account name before enabling GCash.",
+      );
+      return;
+    }
+
     const token = sessionStorage.getItem("clubNaluAdminToken");
 
     if (!token) {
@@ -124,7 +153,10 @@ function AdminSettings() {
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(settings),
+        body: JSON.stringify({
+          ...settings,
+          gcash_enabled: Number(settings.gcash_enabled),
+        }),
       });
 
       const result = await response.json().catch(() => ({}));
@@ -137,26 +169,34 @@ function AdminSettings() {
       }
 
       if (response.status === 403) {
-        throw new Error("You do not have permission to update bank settings.");
+        throw new Error(
+          "You do not have permission to update payment settings.",
+        );
       }
 
       if (!response.ok || !result.success) {
-        throw new Error(result.message || "Unable to save bank settings.");
+        throw new Error(result.message || "Unable to save payment settings.");
       }
+
+      const data = result.data || {};
 
       setSettings({
         ...emptySettings,
-        ...result.data,
-        bank_name: result.data?.bank_name || "",
-        account_name: result.data?.account_name || "",
-        account_number: result.data?.account_number || "",
-        branch_name: result.data?.branch_name || "",
-        payment_instructions: result.data?.payment_instructions || "",
+        ...data,
+        bank_name: data.bank_name || "",
+        account_name: data.account_name || "",
+        account_number: data.account_number || "",
+        branch_name: data.branch_name || "",
+        payment_instructions: data.payment_instructions || "",
+        gcash_number: data.gcash_number || "",
+        gcash_account_name: data.gcash_account_name || "",
+        gcash_instructions: data.gcash_instructions || "",
+        gcash_enabled: Number(data.gcash_enabled) === 1 ? 1 : 0,
       });
 
-      setSuccess("Bank settings saved successfully.");
+      setSuccess("Payment settings saved successfully.");
     } catch (saveError) {
-      setError(saveError.message || "Unable to save bank settings.");
+      setError(saveError.message || "Unable to save payment settings.");
     } finally {
       setIsSaving(false);
     }
@@ -165,24 +205,27 @@ function AdminSettings() {
   if (isLoading) {
     return (
       <main className="admin-settings-page">
-        <p>Loading bank settings...</p>
+        {" "}
+        <p>Loading payment settings...</p>{" "}
       </main>
     );
   }
 
   return (
     <main className="admin-settings-page">
+      {" "}
       <header className="admin-settings-header">
+        {" "}
         <div>
-          <p className="admin-settings-eyebrow">CLUB NALU RESORT</p>
-          <h1>Bank Settings</h1>
+          {" "}
+          <p className="admin-settings-eyebrow">CLUB NALU RESORT</p>{" "}
+          <h1>Payment Settings</h1>{" "}
           <p>
-            Manage the bank transfer details displayed to guests when they make
-            a reservation.
-          </p>
-        </div>
+            Manage the Bank Transfer and GCash details displayed to guests when
+            they make a reservation.{" "}
+          </p>{" "}
+        </div>{" "}
       </header>
-
       {error && (
         <div
           className="admin-settings-message admin-settings-error"
@@ -191,7 +234,6 @@ function AdminSettings() {
           {error}
         </div>
       )}
-
       {success && (
         <div
           className="admin-settings-message admin-settings-success"
@@ -200,97 +242,183 @@ function AdminSettings() {
           {success}
         </div>
       )}
+      <form onSubmit={handleSubmit}>
+        {/* BANK TRANSFER SETTINGS */}
+        <section className="admin-settings-card">
+          <div className="admin-settings-card-heading">
+            <h2>Bank Transfer Details</h2>
+            <p>
+              Manage the bank account guests use to pay for their reservations.
+            </p>
+          </div>
 
-      <section className="admin-settings-card">
-        <div className="admin-settings-card-heading">
-          <h2>Bank Transfer Details</h2>
+          <div className="admin-settings-card-body">
+            <div className="admin-settings-form-grid">
+              <div className="admin-settings-field">
+                <label htmlFor="bank_name">Bank Name *</label>
+                <input
+                  id="bank_name"
+                  name="bank_name"
+                  type="text"
+                  maxLength={150}
+                  value={settings.bank_name}
+                  onChange={handleChange}
+                  placeholder="Enter bank name"
+                  required
+                />
+              </div>
+
+              <div className="admin-settings-field">
+                <label htmlFor="account_name">Account Name *</label>
+                <input
+                  id="account_name"
+                  name="account_name"
+                  type="text"
+                  maxLength={150}
+                  value={settings.account_name}
+                  onChange={handleChange}
+                  placeholder="Enter account holder name"
+                  required
+                />
+              </div>
+
+              <div className="admin-settings-field">
+                <label htmlFor="account_number">Account Number *</label>
+                <input
+                  id="account_number"
+                  name="account_number"
+                  type="text"
+                  maxLength={100}
+                  inputMode="numeric"
+                  autoComplete="off"
+                  value={settings.account_number}
+                  onChange={handleChange}
+                  placeholder="Enter account number"
+                  required
+                />
+              </div>
+
+              <div className="admin-settings-field">
+                <label htmlFor="branch_name">Bank Branch</label>
+                <input
+                  id="branch_name"
+                  name="branch_name"
+                  type="text"
+                  maxLength={100}
+                  value={settings.branch_name}
+                  onChange={handleChange}
+                  placeholder="Enter branch (optional)"
+                />
+              </div>
+
+              <div className="admin-settings-field admin-settings-field-full">
+                <label htmlFor="payment_instructions">
+                  Bank Transfer Instructions
+                </label>
+                <textarea
+                  id="payment_instructions"
+                  name="payment_instructions"
+                  rows={4}
+                  value={settings.payment_instructions}
+                  onChange={handleChange}
+                  placeholder="Explain how guests should make a bank transfer."
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* GCASH SETTINGS */}
+        <section className="admin-settings-card admin-settings-gcash-card">
+          <div className="admin-settings-card-heading">
+            <h2>GCash Details</h2>
+            <p>
+              Configure the GCash account guests can use to pay for
+              reservations.
+            </p>
+          </div>
+
+          <div className="admin-settings-card-body">
+            <label className="admin-settings-toggle">
+              <span>
+                <strong>Enable GCash payments</strong>
+                <small>
+                  When enabled, guests can select GCash during checkout.
+                </small>
+              </span>
+
+              <input
+                type="checkbox"
+                checked={Number(settings.gcash_enabled) === 1}
+                onChange={handleGcashToggle}
+                aria-label="Enable GCash payments"
+              />
+
+              <span
+                className="admin-settings-toggle-switch"
+                aria-hidden="true"
+              />
+            </label>
+
+            <div className="admin-settings-form-grid">
+              <div className="admin-settings-field">
+                <label htmlFor="gcash_number">GCash Number *</label>
+                <input
+                  id="gcash_number"
+                  name="gcash_number"
+                  type="tel"
+                  inputMode="tel"
+                  maxLength={50}
+                  autoComplete="off"
+                  value={settings.gcash_number}
+                  onChange={handleChange}
+                  placeholder="Enter registered GCash number"
+                  required={Number(settings.gcash_enabled) === 1}
+                />
+              </div>
+
+              <div className="admin-settings-field">
+                <label htmlFor="gcash_account_name">GCash Account Name *</label>
+                <input
+                  id="gcash_account_name"
+                  name="gcash_account_name"
+                  type="text"
+                  maxLength={150}
+                  value={settings.gcash_account_name}
+                  onChange={handleChange}
+                  placeholder="Enter registered account name"
+                  required={Number(settings.gcash_enabled) === 1}
+                />
+              </div>
+
+              <div className="admin-settings-field admin-settings-field-full">
+                <label htmlFor="gcash_instructions">
+                  GCash Payment Instructions
+                </label>
+                <textarea
+                  id="gcash_instructions"
+                  name="gcash_instructions"
+                  rows={4}
+                  value={settings.gcash_instructions}
+                  onChange={handleChange}
+                  placeholder="Explain how guests should pay through GCash and provide their transaction reference."
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="admin-settings-form-footer">
           <p>
-            Ensure these details are correct before saving. Guests may use them
-            to make payments for their reservations.
+            * Required for Bank Transfer. GCash details are required when GCash
+            is enabled.
           </p>
+
+          <button type="submit" disabled={isSaving}>
+            {isSaving ? "Saving Changes..." : "Save Payment Settings"}
+          </button>
         </div>
-
-        <form onSubmit={handleSubmit}>
-          <div className="admin-settings-form-grid">
-            <div className="admin-settings-field">
-              <label htmlFor="bank_name">Bank Name *</label>
-              <input
-                id="bank_name"
-                name="bank_name"
-                type="text"
-                maxLength={150}
-                value={settings.bank_name}
-                onChange={handleChange}
-                placeholder="Enter bank name"
-                required
-              />
-            </div>
-
-            <div className="admin-settings-field">
-              <label htmlFor="account_name">Account Name *</label>
-              <input
-                id="account_name"
-                name="account_name"
-                type="text"
-                maxLength={150}
-                value={settings.account_name}
-                onChange={handleChange}
-                placeholder="Enter account holder name"
-                required
-              />
-            </div>
-
-            <div className="admin-settings-field">
-              <label htmlFor="account_number">Account Number *</label>
-              <input
-                id="account_number"
-                name="account_number"
-                type="text"
-                maxLength={100}
-                inputMode="numeric"
-                autoComplete="off"
-                value={settings.account_number}
-                onChange={handleChange}
-                placeholder="Enter account number"
-                required
-              />
-            </div>
-
-            <div className="admin-settings-field">
-              <label htmlFor="branch_name">Bank Branch</label>
-              <input
-                id="branch_name"
-                name="branch_name"
-                type="text"
-                maxLength={100}
-                value={settings.branch_name}
-                onChange={handleChange}
-                placeholder="Enter branch (optional)"
-              />
-            </div>
-
-            <div className="admin-settings-field admin-settings-field-full">
-              <label htmlFor="payment_instructions">Payment Instructions</label>
-              <textarea
-                id="payment_instructions"
-                name="payment_instructions"
-                rows={5}
-                value={settings.payment_instructions}
-                onChange={handleChange}
-                placeholder="Explain how guests should make their bank transfer and submit payment proof."
-              />
-            </div>
-          </div>
-
-          <div className="admin-settings-form-footer">
-            <p>* Required fields</p>
-
-            <button type="submit" disabled={isSaving}>
-              {isSaving ? "Saving Changes..." : "Save Bank Settings"}
-            </button>
-          </div>
-        </form>
-      </section>
+      </form>
     </main>
   );
 }

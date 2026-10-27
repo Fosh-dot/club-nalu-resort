@@ -1,16 +1,19 @@
 const { pool } = require("../config/db");
 
 // GET /api/payment-settings
-// Public endpoint: retrieve the current bank transfer details.
+// Public endpoint: retrieve bank transfer and GCash settings.
 async function getPaymentSettings(req, res) {
   try {
-    const [rows] = await pool.execute(`
-      SELECT
+    const [rows] = await pool.execute(`       SELECT
         bank_name,
         account_name,
         account_number,
         branch_name,
         payment_instructions,
+        gcash_number,
+        gcash_account_name,
+        gcash_instructions,
+        gcash_enabled,
         updated_at
       FROM payment_settings
       ORDER BY id ASC
@@ -39,7 +42,7 @@ async function getPaymentSettings(req, res) {
 }
 
 // PUT /api/payment-settings
-// Protected endpoint: update the resort's bank transfer details.
+// Protected endpoint: update Bank Transfer and GCash settings.
 async function updatePaymentSettings(req, res) {
   try {
     const {
@@ -48,8 +51,13 @@ async function updatePaymentSettings(req, res) {
       account_number,
       branch_name,
       payment_instructions,
+      gcash_number,
+      gcash_account_name,
+      gcash_instructions,
+      gcash_enabled,
     } = req.body;
 
+    // Existing Bank Transfer fields remain required.
     if (
       typeof bank_name !== "string" ||
       !bank_name.trim() ||
@@ -64,16 +72,23 @@ async function updatePaymentSettings(req, res) {
       });
     }
 
+    // Validate field types and lengths.
     if (
       bank_name.trim().length > 150 ||
       account_name.trim().length > 150 ||
       account_number.trim().length > 100 ||
       (branch_name != null &&
-        (typeof branch_name !== "string" || branch_name.trim().length > 100))
+        (typeof branch_name !== "string" || branch_name.trim().length > 100)) ||
+      (gcash_number != null &&
+        (typeof gcash_number !== "string" ||
+          gcash_number.trim().length > 50)) ||
+      (gcash_account_name != null &&
+        (typeof gcash_account_name !== "string" ||
+          gcash_account_name.trim().length > 150))
     ) {
       return res.status(400).json({
         success: false,
-        message: "One or more bank details exceed the allowed length.",
+        message: "One or more payment details are invalid or too long.",
       });
     }
 
@@ -83,7 +98,31 @@ async function updatePaymentSettings(req, res) {
     ) {
       return res.status(400).json({
         success: false,
-        message: "Payment instructions must be text.",
+        message: "Bank payment instructions must be text.",
+      });
+    }
+
+    if (gcash_instructions != null && typeof gcash_instructions !== "string") {
+      return res.status(400).json({
+        success: false,
+        message: "GCash payment instructions must be text.",
+      });
+    }
+
+    const gcashEnabled =
+      gcash_enabled === true || gcash_enabled === 1 || gcash_enabled === "1"
+        ? 1
+        : 0;
+
+    // Do not enable GCash without its required details.
+    if (
+      gcashEnabled &&
+      (!gcash_number?.trim() || !gcash_account_name?.trim())
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Enter the GCash number and account name before enabling GCash.",
       });
     }
 
@@ -97,44 +136,65 @@ async function updatePaymentSettings(req, res) {
       account_number.trim(),
       branch_name?.trim() || null,
       payment_instructions?.trim() || null,
+      gcash_number?.trim() || null,
+      gcash_account_name?.trim() || null,
+      gcash_instructions?.trim() || null,
+      gcashEnabled,
     ];
 
     if (existingRows.length > 0) {
       await pool.execute(
         `UPDATE payment_settings
-         SET bank_name = ?,
-             account_name = ?,
-             account_number = ?,
-             branch_name = ?,
-             payment_instructions = ?
-         WHERE id = ?`,
+     SET bank_name = ?,
+         account_name = ?,
+         account_number = ?,
+         branch_name = ?,
+         payment_instructions = ?,
+         gcash_number = ?,
+         gcash_account_name = ?,
+         gcash_instructions = ?,
+         gcash_enabled = ?
+     WHERE id = ?`,
         [...values, existingRows[0].id],
       );
     } else {
       await pool.execute(
-        `INSERT INTO payment_settings
-          (bank_name, account_name, account_number, branch_name, payment_instructions)
-         VALUES (?, ?, ?, ?, ?)`,
+        `INSERT INTO payment_settings (
+       bank_name,
+       account_name,
+       account_number,
+       branch_name,
+       payment_instructions,
+       gcash_number,
+       gcash_account_name,
+       gcash_instructions,
+       gcash_enabled
+     )
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         values,
       );
     }
 
     const [updatedRows] = await pool.execute(`
-      SELECT
-        bank_name,
-        account_name,
-        account_number,
-        branch_name,
-        payment_instructions,
-        updated_at
-      FROM payment_settings
-      ORDER BY id ASC
-      LIMIT 1
-    `);
+  SELECT
+    bank_name,
+    account_name,
+    account_number,
+    branch_name,
+    payment_instructions,
+    gcash_number,
+    gcash_account_name,
+    gcash_instructions,
+    gcash_enabled,
+    updated_at
+  FROM payment_settings
+  ORDER BY id ASC
+  LIMIT 1
+`);
 
     return res.status(200).json({
       success: true,
-      message: "Bank settings updated successfully.",
+      message: "Payment settings updated successfully.",
       data: updatedRows[0],
     });
   } catch (error) {
@@ -142,7 +202,7 @@ async function updatePaymentSettings(req, res) {
 
     return res.status(500).json({
       success: false,
-      message: "Unable to update bank settings.",
+      message: "Unable to update payment settings.",
     });
   }
 }

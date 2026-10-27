@@ -48,9 +48,9 @@ const createAccommodation = async (req, res) => {
       total_units = 1,
       image_url = null,
       is_active = false,
-    } = req.body;
+    } = req.body || {};
 
-    if (!name || !name.trim()) {
+    if (typeof name !== "string" || !name.trim()) {
       return res.status(400).json({
         success: false,
         message: "Accommodation name is required.",
@@ -198,30 +198,39 @@ const updateAccommodation = async (req, res) => {
       total_units,
       image_url,
       is_active,
-    } = req.body;
+    } = req.body || {};
 
     const updatedName = name === undefined ? existing.name : name;
+
     const updatedDescription =
       description === undefined ? existing.description : description;
 
     const updatedPrice =
       price_per_night === undefined
         ? Number(existing.price_per_night)
-        : Number(price_per_night);
+        : price_per_night === "" || price_per_night === null
+          ? NaN
+          : Number(price_per_night);
 
     const updatedAdults =
-      max_adults === undefined ? existing.max_adults : Number(max_adults);
+      max_adults === undefined
+        ? Number(existing.max_adults)
+        : Number(max_adults);
 
     const updatedChildren =
-      max_children === undefined ? existing.max_children : Number(max_children);
+      max_children === undefined
+        ? Number(existing.max_children)
+        : Number(max_children);
 
     const updatedUnits =
-      total_units === undefined ? existing.total_units : Number(total_units);
+      total_units === undefined
+        ? Number(existing.total_units)
+        : Number(total_units);
 
     const updatedImage =
       image_url === undefined ? existing.image_url : image_url || null;
 
-    let updatedActive = existing.is_active;
+    let updatedActive = Number(existing.is_active) === 1;
 
     if (is_active !== undefined) {
       if (![true, false, 1, 0, "1", "0", "true", "false"].includes(is_active)) {

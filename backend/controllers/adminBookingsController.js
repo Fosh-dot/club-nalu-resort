@@ -1,8 +1,12 @@
 const { pool } = require("../config/db");
 
+// GET /api/admin/bookings
+// Retrieve recent bookings, including guest, accommodation,
+// and payment information.
 async function getAdminBookings(req, res) {
   try {
-    const [bookings] = await pool.query(`       SELECT
+    const [bookings] = await pool.query(`
+      SELECT
         b.id,
         b.booking_reference,
         b.guest_id,
@@ -43,7 +47,6 @@ async function getAdminBookings(req, res) {
     return res.status(500).json({
       success: false,
       message: "Unable to load bookings.",
-      error: error.message,
     });
   }
 }

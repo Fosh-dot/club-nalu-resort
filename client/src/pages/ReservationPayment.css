@@ -1059,3 +1059,57 @@
     scroll-behavior: auto;
   }
 }
+.club-nalu-payment-options {
+  display: flex;
+  gap: 12px;
+  margin: 18px 0;
+  flex-wrap: wrap;
+}
+
+.club-nalu-payment-option {
+  flex: 1;
+  min-width: 140px;
+  padding: 14px 18px;
+  border: 1px solid #d8d0c5;
+  border-radius: 6px;
+  background: #fff;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.club-nalu-payment-option:hover,
+.club-nalu-payment-option.active {
+  border-color: #b69a70;
+  background: #f5f0e8;
+}
+
+.club-nalu-payment-option.active {
+  font-weight: 600;
+}
+
+.club-nalu-payment-details {
+  margin-top: 18px;
+  padding: 18px;
+  border: 1px solid #e5ded4;
+  border-radius: 6px;
+  overflow-wrap: anywhere;
+}
+
+.club-nalu-payment-details p {
+  margin: 10px 0;
+  line-height: 1.7;
+}
+
+@media (max-width: 480px) {
+  .club-nalu-payment-options {
+    flex-direction: column;
+  }
+
+  .club-nalu-payment-option {
+    width: 100%;
+  }
+}

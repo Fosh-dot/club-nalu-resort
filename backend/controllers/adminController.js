@@ -4,8 +4,9 @@ const { pool } = require("../config/db");
 
 const loginAdmin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password } = req.body || {};
 
+    // Validate login details.
     if (
       typeof email !== "string" ||
       typeof password !== "string" ||
@@ -20,11 +21,18 @@ const loginAdmin = async (req, res) => {
 
     const normalizedEmail = email.trim().toLowerCase();
 
+    // Find the administrator account.
     const [admins] = await pool.execute(
-      `SELECT id, full_name, email, password_hash, role, is_active
-   FROM admins
-   WHERE email = ?
-   LIMIT 1`,
+      `SELECT
+         id,
+         full_name,
+         email,
+         password_hash,
+         role,
+         is_active
+       FROM admins
+       WHERE email = ?
+       LIMIT 1`,
       [normalizedEmail],
     );
 
@@ -37,13 +45,15 @@ const loginAdmin = async (req, res) => {
 
     const admin = admins[0];
 
-    if (!admin.is_active) {
+    // Do not allow inactive administrator accounts to log in.
+    if (admin.is_active === false || Number(admin.is_active) !== 1) {
       return res.status(403).json({
         success: false,
         message: "This administrator account is inactive.",
       });
     }
 
+    // Verify the password.
     const passwordMatches = await bcrypt.compare(password, admin.password_hash);
 
     if (!passwordMatches) {
@@ -53,6 +63,7 @@ const loginAdmin = async (req, res) => {
       });
     }
 
+    // Ensure JWT authentication is configured.
     if (!process.env.JWT_SECRET) {
       console.error("JWT_SECRET is missing from the backend environment.");
 
@@ -62,6 +73,7 @@ const loginAdmin = async (req, res) => {
       });
     }
 
+    // Generate the administrator authentication token.
     const token = jwt.sign(
       {
         id: admin.id,
@@ -98,6 +110,7 @@ const loginAdmin = async (req, res) => {
     });
   }
 };
+
 const getAdminSession = async (req, res) => {
   return res.status(200).json({
     success: true,
@@ -107,4 +120,7 @@ const getAdminSession = async (req, res) => {
   });
 };
 
-module.exports = { loginAdmin, getAdminSession };
+module.exports = {
+  loginAdmin,
+  getAdminSession,
+};
