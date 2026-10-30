@@ -32,7 +32,6 @@ function App() {
         <Route path="/admin/bookings" element={<AdminBookings />} />
         <Route path="/admin/payments" element={<AdminPayments />} />
         <Route path="/admin/settings" element={<AdminSettings />} />
-        {/* Redirect accommodation management to the dashboard */}
         <Route
           path="/admin/accommodations"
           element={<Navigate to="/admin" replace />}

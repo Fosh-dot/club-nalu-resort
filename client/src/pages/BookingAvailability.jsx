@@ -797,7 +797,7 @@ function BookingAvailability({
           <div className="availability-rates-bar">
             <strong>Online Rates</strong>
 
-            <span>This website&nbsp; {money(roomOptions[0].price)}</span>
+            <span>&nbsp; {money(roomOptions[0].price)}</span>
           </div>
 
           <div className="availability-results-content">
