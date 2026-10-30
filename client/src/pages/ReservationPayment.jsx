@@ -6,7 +6,10 @@ function ReservationPayment() {
   const navigate = useNavigate();
   const [phone, setPhone] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("bank_transfer");
+  const [paymentPlan, setPaymentPlan] = useState("full");
   const [paymentSettings, setPaymentSettings] = useState(null);
+  const [selectedAccommodation, setSelectedAccommodation] = useState(null);
+  const [isLoadingAccommodation, setIsLoadingAccommodation] = useState(false);
   const [showReservationSuccess, setShowReservationSuccess] = useState(false);
 
   const [createdBooking, setCreatedBooking] = useState(() => {
@@ -43,6 +46,61 @@ function ReservationPayment() {
   const guestDetails = readSessionObject("clubNaluGuestDetails");
   const bookingDetails = readSessionObject("clubNaluBookingDetails");
 
+  // Load the selected accommodation's current rate from the live database API.
+  useEffect(() => {
+    const accommodationId = Number(
+      bookingDetails.accommodationId || bookingDetails.roomId,
+    );
+
+    if (!Number.isInteger(accommodationId) || accommodationId < 1) return;
+
+    let cancelled = false;
+    const apiBaseUrl = (
+      import.meta.env.VITE_API_URL || "https://api.clubnalu.org"
+    ).replace(/\/$/, "");
+
+    fetch(`${apiBaseUrl}/api/accommodations`)
+      .then(async (response) => {
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.success) {
+          throw new Error(
+            result.message || "Could not load accommodation rates.",
+          );
+        }
+
+        const records = Array.isArray(result.data)
+          ? result.data
+          : Array.isArray(result.data?.accommodations)
+            ? result.data.accommodations
+            : Array.isArray(result.accommodations)
+              ? result.accommodations
+              : [];
+
+        const match = records.find(
+          (item) =>
+            Number(item.id ?? item.accommodationId ?? item.accommodation_id) ===
+            accommodationId,
+        );
+
+        if (!match) {
+          throw new Error("The selected accommodation could not be found.");
+        }
+
+        if (!cancelled) setSelectedAccommodation(match);
+      })
+      .catch((error) => {
+        console.error("Could not load selected accommodation:", error);
+        if (!cancelled) setSelectedAccommodation(null);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingAccommodation(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [bookingDetails.accommodationId, bookingDetails.roomId]);
+
   const money = (amount) =>
     new Intl.NumberFormat("en-PH", {
       style: "currency",
@@ -56,7 +114,7 @@ function ReservationPayment() {
   // Load bank transfer and GCash details configured by the administrator.
   useEffect(() => {
     const apiBaseUrl = (
-      import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+      import.meta.env.VITE_API_URL || "https://api.clubnalu.org"
     ).replace(/\/$/, "");
 
     fetch(`${apiBaseUrl}/api/payment-settings`)
@@ -99,7 +157,7 @@ function ReservationPayment() {
 
     try {
       const apiBaseUrl = (
-        import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+        import.meta.env.VITE_API_URL || "https://api.clubnalu.org"
       ).replace(/\/$/, "");
 
       const response = await fetch(
@@ -201,8 +259,18 @@ function ReservationPayment() {
       return;
     }
 
+    if (isLoadingAccommodation || roomAmount <= 0 || totalWithTaxes <= 0) {
+      alert(
+        "The accommodation price is still loading or unavailable. Please wait or return to select your room again.",
+      );
+      return;
+    }
+
     const paymentDetails = {
       phone: phone.trim(),
+      paymentPlan,
+      amountDueNow,
+      remainingBalance,
       paymentMethod,
       newsletter,
       acceptedPolicies,
@@ -225,6 +293,9 @@ function ReservationPayment() {
       rooms,
       accommodationId,
       paymentMethod,
+      paymentPlan,
+      depositPercentage: paymentPlan === "deposit" ? 60 : 100,
+      amountToPay: amountDueNow,
       specialRequests: guestDetails.specialRequests || "",
       newsletter: Boolean(newsletter || guestDetails.newsletter),
     };
@@ -233,7 +304,7 @@ function ReservationPayment() {
 
     try {
       const apiBaseUrl = (
-        import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+        import.meta.env.VITE_API_URL || "https://api.clubnalu.org"
       ).replace(/\/$/, "");
 
       const response = await fetch(`${apiBaseUrl}/api/bookings`, {
@@ -255,6 +326,10 @@ function ReservationPayment() {
       const bookingWithPaymentMethod = {
         ...result.data,
         paymentMethod: result.data?.paymentMethod || paymentMethod,
+        paymentPlan: result.data?.paymentPlan || paymentPlan,
+        amountDue:
+          Number(result.data?.amountDue ?? result.data?.amountToPay) ||
+          amountDueNow,
       };
 
       sessionStorage.setItem(
@@ -266,7 +341,7 @@ function ReservationPayment() {
       setShowReservationSuccess(true);
 
       setReceiptMessage(
-        effectivePaymentMethod === "gcash"
+        paymentMethod === "gcash"
           ? "Reservation created. Pay using the GCash details below, then upload your receipt."
           : "Reservation created. Transfer the amount to the bank account below, then upload your receipt.",
       );
@@ -281,16 +356,90 @@ function ReservationPayment() {
       setIsSubmitting(false);
     }
   };
+  // Calculate the actual stay duration from the selected dates.
+  const calculateNights = (checkIn, checkOut) => {
+    if (!checkIn || !checkOut) return 1;
+
+    const start = new Date(`${checkIn}T12:00:00`);
+    const end = new Date(`${checkOut}T12:00:00`);
+
+    if (
+      Number.isNaN(start.getTime()) ||
+      Number.isNaN(end.getTime()) ||
+      end <= start
+    ) {
+      return 1;
+    }
+
+    return Math.round((end - start) / 86400000);
+  };
+
+  const formatReservationDate = (value) => {
+    if (!value) return "Select date";
+
+    const date = new Date(`${value}T12:00:00`);
+
+    if (Number.isNaN(date.getTime())) return value;
+
+    return date.toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const nights = calculateNights(
+    bookingDetails.checkIn,
+    bookingDetails.checkOut,
+  );
+
+  const roomCount = Math.max(1, Number(bookingDetails.rooms) || 1);
+
+  // Use the live accommodation rate first; fall back to the saved booking rate.
+  const rateValue =
+    selectedAccommodation?.price_per_night ??
+    selectedAccommodation?.pricePerNight ??
+    selectedAccommodation?.nightly_rate ??
+    selectedAccommodation?.nightlyRate ??
+    selectedAccommodation?.base_price ??
+    selectedAccommodation?.price ??
+    bookingDetails.roomPricePerNight;
+
+  const nightlyRate = Number(rateValue);
+
+  // Calculate room charges from the actual stay duration and room count.
+  const roomAmount =
+    Number.isFinite(nightlyRate) && nightlyRate > 0
+      ? nightlyRate * nights * roomCount
+      : 0;
+
+  // Keep the current 12% tax calculation used by the booking summary.
+  const taxRate = 0.12;
+  const taxes = roomAmount * taxRate;
+  const totalWithTaxes = roomAmount + taxes;
+  const amountDueNow =
+    paymentPlan === "deposit" ? totalWithTaxes * 0.6 : totalWithTaxes;
+  const remainingBalance = Math.max(0, totalWithTaxes - amountDueNow);
+
   const reservation = {
-    room: bookingDetails.room || "Deluxe",
-    roomGuests: bookingDetails.roomGuests || "2 Adults",
-    checkIn: bookingDetails.checkIn || "Sat 21 Nov 2026",
-    checkOut: bookingDetails.checkOut || "Tue 24 Nov 2026",
-    nights: bookingDetails.nights || 3,
-    guests: bookingDetails.guests || 2,
-    roomPrice: Number(bookingDetails.roomPrice ?? 38346.43),
-    taxes: Number(bookingDetails.taxes ?? 4601.57),
-    totalWithTaxes: Number(bookingDetails.totalWithTaxes ?? 42948),
+    room:
+      bookingDetails.roomName ||
+      bookingDetails.room ||
+      "Selected accommodation",
+    roomGuests:
+      bookingDetails.roomGuests ||
+      `${Number(bookingDetails.adults ?? 2)} Adults`,
+    checkIn: formatReservationDate(bookingDetails.checkIn),
+    checkOut: formatReservationDate(bookingDetails.checkOut),
+    nights,
+    guests:
+      Number(bookingDetails.adults ?? 2) +
+      Number(bookingDetails.kids ?? bookingDetails.children ?? 0),
+    rooms: roomCount,
+    roomPrice: roomAmount,
+    taxes,
+    totalWithTaxes,
   };
 
   return (
@@ -407,7 +556,11 @@ function ReservationPayment() {
             </div>
 
             <strong className="payment-room-price">
-              {money(reservation.roomPrice)}
+              {isLoadingAccommodation
+                ? "Loading rate..."
+                : reservation.roomPrice > 0
+                  ? money(reservation.roomPrice)
+                  : "Rate unavailable"}
             </strong>
 
             <p>{reservation.roomGuests}</p>
@@ -436,6 +589,21 @@ function ReservationPayment() {
             <span>Total with taxes</span>
             <strong>{money(reservation.totalWithTaxes)}</strong>
           </div>
+
+          <div className="payment-total-row">
+            <span>
+              {paymentPlan === "deposit"
+                ? "60% deposit due now"
+                : "Amount due now"}
+            </span>
+            <strong>{money(amountDueNow)}</strong>
+          </div>
+          {paymentPlan === "deposit" && (
+            <div className="payment-total-row">
+              <span>Remaining balance</span>
+              <strong>{money(remainingBalance)}</strong>
+            </div>
+          )}
 
           <button
             type="button"
@@ -518,6 +686,57 @@ function ReservationPayment() {
               id="club-nalu-payment-section"
               className="club-nalu-bank-details"
             >
+              <h3>Choose Your Payment Plan</h3>
+
+              <div
+                className="club-nalu-payment-options"
+                role="group"
+                aria-label="Choose payment plan"
+                style={{ marginBottom: "18px" }}
+              >
+                <button
+                  type="button"
+                  className={`club-nalu-payment-option ${
+                    paymentPlan === "deposit" ? "active" : ""
+                  }`}
+                  aria-pressed={paymentPlan === "deposit"}
+                  onClick={() => setPaymentPlan("deposit")}
+                  disabled={Boolean(createdBooking)}
+                >
+                  Pay 60% Deposit
+                </button>
+                <button
+                  type="button"
+                  className={`club-nalu-payment-option ${
+                    paymentPlan === "full" ? "active" : ""
+                  }`}
+                  aria-pressed={paymentPlan === "full"}
+                  onClick={() => setPaymentPlan("full")}
+                  disabled={Boolean(createdBooking)}
+                >
+                  Pay 100% in Full
+                </button>
+              </div>
+
+              <div
+                className="payment-total-row"
+                style={{ marginBottom: "18px" }}
+              >
+                <span>
+                  {paymentPlan === "deposit"
+                    ? "60% deposit due now"
+                    : "Full payment due now"}
+                </span>
+                <strong>{money(amountDueNow)}</strong>
+              </div>
+              {paymentPlan === "deposit" && (
+                <p style={{ marginBottom: "18px" }}>
+                  Remaining 40% balance:{" "}
+                  <strong>{money(remainingBalance)}</strong>. This balance is
+                  payable according to the resort's payment policy.
+                </p>
+              )}
+
               <h3>Choose Payment Method</h3>
 
               <div
@@ -668,6 +887,7 @@ function ReservationPayment() {
                   ? "Reservation submitted"
                   : "Submit reservation"}
             </button>
+
             {/* BOOKING CONFIRMATION */}
             {createdBooking && showReservationSuccess && (
               <div className="club-nalu-success-overlay">
@@ -725,8 +945,13 @@ function ReservationPayment() {
 
                   <div className="club-nalu-success-amount">
                     <span>Amount Due</span>
-
-                    <strong>{money(createdBooking.totalAmount)}</strong>
+                    <strong>
+                      {money(
+                        createdBooking.amountDue ??
+                          createdBooking.amountToPay ??
+                          amountDueNow,
+                      )}
+                    </strong>
                   </div>
 
                   <div className="club-nalu-success-status">
@@ -761,7 +986,6 @@ function ReservationPayment() {
                 </div>
               </div>
             )}
-
             {/* RECEIPT UPLOAD */}
             {createdBooking && (
               <section className="club-nalu-receipt-section">
@@ -769,8 +993,8 @@ function ReservationPayment() {
 
                 <p>
                   {effectivePaymentMethod === "gcash"
-                    ? "After completing your GCash payment, select the receipt or transaction confirmation you want the resort to verify."
-                    : "After completing your bank transfer, select the receipt or transfer confirmation you want the resort to verify."}
+                    ? `After paying ${money(createdBooking?.amountDue ?? createdBooking?.amountToPay ?? amountDueNow)} through GCash, select your transaction receipt for verification.`
+                    : `After transferring ${money(createdBooking?.amountDue ?? createdBooking?.amountToPay ?? amountDueNow)} to the bank account, select your payment receipt for verification.`}
                 </p>
 
                 <label className="payment-field">
@@ -838,6 +1062,7 @@ function ReservationPayment() {
           </form>
         </section>
       </main>
+
       {/* FOOTER */}
       <footer className="booking-footer" id="booking-footer">
         <span>
@@ -888,6 +1113,7 @@ function ReservationPayment() {
 
             <div className="privacy-modal-content">
               <h3>Privacy Policy</h3>
+
               <p>
                 Club Nalu collects and processes guest information to manage
                 reservations, communicate with guests, and review submitted
