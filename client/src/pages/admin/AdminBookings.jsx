@@ -5,7 +5,7 @@ import "./AdminDashboard.css";
 import "./AdminBookings.css";
 
 const API_URL = (
-  import.meta.env.VITE_API_URL || "https://club-nalu-api.onrender.com"
+  import.meta.env.VITE_API_URL || "https://api.clubnalu.org"
 ).replace(/\/$/, "");
 
 function AdminBookings() {
