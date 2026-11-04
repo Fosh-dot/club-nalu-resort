@@ -1,6 +1,8 @@
 const { randomUUID } = require("crypto");
 const { pool } = require("../config/db");
 
+const { sendBookingReceivedEmail } = require("../utils/emailService");
+
 const EXTRA_PERSON_RATE = 1200;
 
 // POST /api/bookings
@@ -67,8 +69,8 @@ async function createBooking(req, res) {
 
     const start = new Date(`${checkIn}T00:00:00Z`);
     const end = new Date(`${checkOut}T00:00:00Z`);
-    const today = new Date();
 
+    const today = new Date();
     today.setUTCHours(0, 0, 0, 0);
 
     if (
@@ -162,6 +164,7 @@ async function createBooking(req, res) {
 
     // Validate accommodation capacity.
     const totalGuests = guestAdults + guestChildren;
+
     const maxAdults = Number(accommodation.max_adults);
     const maxChildren = Number(accommodation.max_children);
 
@@ -192,7 +195,9 @@ async function createBooking(req, res) {
       extraGuests * EXTRA_PERSON_RATE * nights * roomCount;
 
     const roomSubtotal = nightlyRate * nights * roomCount;
+
     const taxes = 0;
+
     const totalAmount = roomSubtotal + extraGuestCharges + taxes;
 
     // Start the database transaction.
@@ -315,6 +320,48 @@ async function createBooking(req, res) {
     await connection.commit();
     transactionStarted = false;
 
+    // Release the database connection before sending the email.
+    connection.release();
+    connection = null;
+
+    // Send booking received email.
+    let emailSent = false;
+
+    try {
+      const emailResult = await sendBookingReceivedEmail({
+        recipientEmail: normalizedEmail,
+
+        guestName: `${firstName.trim()} ${lastName.trim()}`,
+
+        bookingReference,
+
+        accommodation: accommodation.name,
+
+        checkIn,
+        checkOut,
+        nights,
+
+        adults: guestAdults,
+        children: guestChildren,
+        rooms: roomCount,
+
+        totalAmount,
+
+        paymentMethod: selectedPaymentMethod,
+      });
+
+      emailSent = emailResult?.sent === true;
+
+      if (!emailSent) {
+        console.warn(
+          `Booking email was not sent for ${bookingReference}:`,
+          emailResult?.reason || "Unknown email error.",
+        );
+      }
+    } catch (emailError) {
+      console.error("Booking notification email failed:", emailError.message);
+    }
+
     // Return the booking and its selected payment method.
     return res.status(201).json({
       success: true,
@@ -337,6 +384,7 @@ async function createBooking(req, res) {
         taxes,
         totalAmount,
         currency: "PHP",
+        emailSent,
       },
     });
   } catch (error) {
@@ -361,4 +409,6 @@ async function createBooking(req, res) {
   }
 }
 
-module.exports = { createBooking };
+module.exports = {
+  createBooking,
+};

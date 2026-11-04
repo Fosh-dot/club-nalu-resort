@@ -773,14 +773,14 @@ function BookingAvailability({
             </div>
 
             <ul>
-              <li>10% Off In-Room Massage</li>
+              <li>Daliy BLD</li>
 
               <li>
-                Complimentary Early Check-In and Late Check Out Subject to
-                Availability
+                Complimentary drinks and Ala carte is ever missed the lunch
+                Resort facilities
               </li>
 
-              <li>Best Rate Guaranteed</li>
+              <li>2hours in room massage</li>
             </ul>
 
             <div className="availability-best-rate">
