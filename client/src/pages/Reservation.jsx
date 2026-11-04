@@ -425,8 +425,8 @@ function Reservation() {
                 <li>Daily BLD.</li>
                 <li>
                   Complimentary drinks and Ala carte is ever missed the lunch
-                  Resort facilities.
                 </li>
+                <li> Resort facilities.</li>
                 <li>2 hours in room massage.</li>
                 <li>Direct Reservation, No Booking Fees</li>
                 <li>Exclusive Offers &amp; Benefits</li>
