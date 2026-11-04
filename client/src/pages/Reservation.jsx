@@ -422,12 +422,12 @@ function Reservation() {
                 advantages.
               </p>
               <ul>
-                <li>10% Off In-Room Massage</li>
+                <li>Daily BLD.</li>
                 <li>
-                  Complimentary Early Check-In and Late Check Out Subject to
-                  Availability
+                  Complimentary drinks and Ala carte is ever missed the lunch
+                  Resort facilities.
                 </li>
-                <li>Best Rate Guaranteed</li>
+                <li>2 hours in room massage.</li>
                 <li>Direct Reservation, No Booking Fees</li>
                 <li>Exclusive Offers &amp; Benefits</li>
               </ul>

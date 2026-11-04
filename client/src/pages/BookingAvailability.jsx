@@ -773,14 +773,14 @@ function BookingAvailability({
             </div>
 
             <ul>
-              <li>Daliy BLD</li>
+              <li>Daliy BLD.</li>
 
               <li>
                 Complimentary drinks and Ala carte is ever missed the lunch
-                Resort facilities
+                Resort facilities.
               </li>
 
-              <li>2hours in room massage</li>
+              <li>2hours in room massage.</li>
             </ul>
 
             <div className="availability-best-rate">
